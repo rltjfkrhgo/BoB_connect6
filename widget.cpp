@@ -71,7 +71,10 @@ void Widget::mousePressEvent(QMouseEvent *event)
     ui->lcdX->display(x);
     ui->lcdY->display(y);
 
-    goBoard.setPiece(GoBoard::WHITE, x, y);
+    if(x > -1 && x < 19 && y > -1 && y < 19)
+    {
+        goBoard.setPiece(x, y);
+    }
 
     update();
 }
