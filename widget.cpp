@@ -15,7 +15,6 @@ Widget::~Widget()
 
 void Widget::paintEvent(QPaintEvent *event)
 {
-
     QPainter painter(this);
 
     // 바둑판 배경
@@ -47,19 +46,65 @@ void Widget::paintEvent(QPaintEvent *event)
     {
         for(int x = 0; x < 19; x++)
         {
-            GoBoard::Piece piece = goBoard.getPiece(x, y);
-            if(piece == GoBoard::BLACK)
+            Connect6::Piece piece = connect6.getPiece(x, y);
+            if(piece == Connect6::BLACK)
             {
                 painter.setPen(QPen(Qt::black, 35, Qt::SolidLine, Qt::RoundCap));
                 painter.drawPoint(x*RECTSIZE+BOARD_X, y*RECTSIZE+BOARD_Y);
             }
-            else if(piece == GoBoard::WHITE)
+            else if(piece == Connect6::WHITE)
             {
                 painter.setPen(QPen(Qt::white, 35, Qt::SolidLine, Qt::RoundCap));
                 painter.drawPoint(x*RECTSIZE+BOARD_X, y*RECTSIZE+BOARD_Y);
             }
         }
     }
+
+    // 모드 표시
+    switch(connect6.getMode())
+    {
+    case Connect6::NOT:
+        ui->labelMode->setText("Mode: ");
+        break;
+    case Connect6::SOLO:
+        ui->labelMode->setText("Mode: SOLO");
+        break;
+    case Connect6::DUO:
+        ui->labelMode->setText("Mode: DUO");
+        break;
+    case Connect6::CPUNET:
+        ui->labelMode->setText("Mode: CPUNET");
+        break;
+    }
+
+    // 상태 표시
+    switch(connect6.getStatus())
+    {
+    case Connect6::READY:
+        ui->labelStatus->setText("Status: READY");
+        break;
+    case Connect6::START:
+        ui->labelStatus->setText("Status: START");
+        break;
+    case Connect6::ING:
+        ui->labelStatus->setText("Status: ING");
+        break;
+    case Connect6::END:
+        ui->labelStatus->setText("Status: END");
+        break;
+    }
+
+    // 턴 표시
+    Connect6::Piece piece = connect6.whosTurn();
+    if(piece == Connect6::BLACK)
+    {
+        painter.setPen(QPen(Qt::black, 35, Qt::SolidLine, Qt::RoundCap));
+    }
+    else if(piece == Connect6::WHITE)
+    {
+        painter.setPen(QPen(Qt::white, 35, Qt::SolidLine, Qt::RoundCap));
+    }
+    painter.drawPoint(TURN_X, TURN_Y);
 }
 
 void Widget::mousePressEvent(QMouseEvent *event)
@@ -68,13 +113,28 @@ void Widget::mousePressEvent(QMouseEvent *event)
     int x = (event->x() + (RECTSIZE/2) - BOARD_X) / RECTSIZE;
     int y = (event->y() + (RECTSIZE/2) - BOARD_Y) / RECTSIZE;
 
-    ui->lcdX->display(x);
-    ui->lcdY->display(y);
+    ui->lcdX->display(event->x());
+    ui->lcdY->display(event->y());
 
-    if(x > -1 && x < 19 && y > -1 && y < 19)
-    {
-        goBoard.setPiece(x, y);
-    }
+    connect6.setPiece(x, y);
 
+    update();
+}
+
+void Widget::on_btnReset_clicked()
+{
+    connect6.reset();
+    ui->btnSolo->setEnabled(true);
+    ui->btnDuo->setEnabled(true);
+    ui->btnCpuNet->setEnabled(true);
+    update();
+}
+
+void Widget::on_btnDuo_clicked()
+{
+    connect6.startDuo();
+    ui->btnSolo->setEnabled(false);
+    ui->btnDuo->setEnabled(false);
+    ui->btnCpuNet->setEnabled(false);
     update();
 }

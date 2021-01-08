@@ -1,35 +1,37 @@
-#ifndef GOBOARD_H
-#define GOBOARD_H
+#ifndef CONNECT6_H
+#define CONNECT6_H
 
-class GoBoard
+class Connect6
 {
 public:
     const static int BOARDSIZE = 19;
+    enum Mode{NOT, SOLO, DUO, CPUNET};
+    enum Status{READY, START, ING, END};
     enum Piece{EMPTY, BLACK, WHITE};
 
-    GoBoard();
-    void resetBoard();
+    Connect6();
+    void reset();
 
-    bool isEmpty(int x, int y);
+    Mode getMode();
+    Status getStatus();
 
-    int setPiece(Piece color, int x, int y);
     void setPiece(int x, int y);
     Piece getPiece(int x, int y);
 
     void changeTurn();
-    Piece getTurn();
+    Piece whosTurn();
 
-    bool checkGameOver(Piece color, int x, int y);
+    void startDuo();
 
 private:
+    Mode mode;
+    Status status;
     Piece board[BOARDSIZE][BOARDSIZE];
-    Piece turn;
-    Piece lastColor;
-    int lastX1;
-    int lastY1;
-    int lastX2;
-    int lastY2;
-    int count;
+    Piece turn;  // 현재 차례
+    int setCount;
+    int numOfPiece;
+
+    int setPiece(Piece color, int x, int y);
 
     int countN(Piece color, int x, int y);
     int countS(Piece color, int x, int y);
@@ -39,12 +41,6 @@ private:
     int countNE(Piece color, int x, int y);
     int countSW(Piece color, int x, int y);
     int countSE(Piece color, int x, int y);
-
-public:
-    int countH(Piece color, int x, int y);
-    int countV(Piece color, int x, int y);
-    int countRD(Piece color, int x, int y);
-    int countLD(Piece color, int x, int y);
 };
 
-#endif // GOBOARD_H
+#endif

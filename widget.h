@@ -6,7 +6,7 @@
 #include <QPainter>
 #include <QMouseEvent>
 
-#include "GoBoard.h"
+#include "Connect6.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class Widget; }
@@ -30,12 +30,18 @@ private:
     const int BOARD_Y = 40;  // 바둑판 시작 Y 좌표
     const int BOARD_OFFSET = 30;  // 바둑판 여백
     const int BOARDSIZE = RECTSIZE * 18 + BOARD_OFFSET * 2;  // 바둑판 총 사이즈
-    const int CLICK_OFFSET = 10;  // 좌표 클릭할 때 인지할 오프셋
+    //const int CLICK_OFFSET = 10;  // 좌표 클릭할 때 인지할 오프셋
 
-    GoBoard goBoard;
+    const int TURN_X = 950;
+    const int TURN_Y = 270;
+
+    Connect6 connect6;  // 바둑판
 
 protected:
     void paintEvent(QPaintEvent *event);
     void mousePressEvent(QMouseEvent *event);
+private slots:
+    void on_btnReset_clicked();
+    void on_btnDuo_clicked();
 };
 #endif // WIDGET_H
