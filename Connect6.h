@@ -33,6 +33,8 @@ private:
 
     int setPiece(Piece color, int x, int y);
 
+    bool isEnd(Piece color, int x, int y);
+
     int countN(Piece color, int x, int y);
     int countS(Piece color, int x, int y);
     int countE(Piece color, int x, int y);
@@ -41,6 +43,11 @@ private:
     int countNE(Piece color, int x, int y);
     int countSW(Piece color, int x, int y);
     int countSE(Piece color, int x, int y);
+
+    int countH(Piece color, int x, int y);
+    int countV(Piece color, int x, int y);
+    int countRD(Piece color, int x, int y);
+    int countLD(Piece color, int x, int y);
 };
 
 #endif

@@ -55,20 +55,28 @@ void Connect6::setPiece(int x, int y)
     switch(mode)
     {
     case DUO:
+        // 첫수
         if(status == START)
         {
             setPiece(BLACK, x, y);
             count = 0;
             status = ING;
         }
-        else
+        else if(status == ING)
         {
             setPiece(turn, x, y);
             count--;
         }
         break;
+
     default:
         break;
+    }
+
+    // 게임 끝났나?
+    if(isEnd(turn, x, y))
+    {
+        status = END;
     }
 
     // 2개 놓으면 색깔 바뀌고 카운트 초기화
@@ -111,6 +119,17 @@ void Connect6::changeTurn()
 Connect6::Piece Connect6::whosTurn()
 {
     return turn;
+}
+
+bool Connect6::isEnd(Piece color, int x, int y)
+{
+    if(countH (color, x, y) == 6 ||
+       countV (color, x, y) == 6 ||
+       countRD(color, x, y) == 6 ||
+       countLD(color, x, y) == 6)
+        return true;
+    else
+        return false;
 }
 
 // 둘이서 시작

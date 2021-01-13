@@ -17,13 +17,12 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     Connect6.cpp \
-    GoBoard.cpp \
+    Connect6_count.cpp \
     main.cpp \
     widget.cpp
 
 HEADERS += \
     Connect6.h \
-    GoBoard.h \
     widget.h
 
 FORMS += \

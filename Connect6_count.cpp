@@ -38,7 +38,7 @@ int Connect6::countE(Piece color, int x, int y)
 int Connect6::countW(Piece color, int x, int y)
 {
     int count = 0;
-    for(x = y-1; x > -1; x--)
+    for(x = x-1; x > -1; x--)
     {
         if(board[y][x] != color)
             break;
@@ -88,5 +88,40 @@ int Connect6::countSE(Piece color, int x, int y)  // ↘
             break;
         count++;
     }
+    return count;
+}
+
+
+// 해당 색상이 x, y에 놓아서
+// 방향으로 몇 개 놓여 있는가?
+int Connect6::countH(Piece color, int x, int y)
+{
+    int count = 1;
+    count += countW(color, x, y);
+    count += countE(color, x, y);
+    return count;
+}
+
+int Connect6::countV(Piece color, int x, int y)
+{
+    int count = 1;
+    count += countN(color, x, y);
+    count += countS(color, x, y);
+    return count;
+}
+
+int Connect6::countRD(Piece color, int x, int y)  // right down
+{
+    int count = 1;
+    count += countNW(color, x, y);
+    count += countSE(color, x, y);
+    return count;
+}
+
+int Connect6::countLD(Piece color, int x, int y)  // left down
+{
+    int count = 1;
+    count += countNE(color, x, y);
+    count += countSW(color, x, y);
     return count;
 }
