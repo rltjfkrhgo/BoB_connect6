@@ -6,6 +6,9 @@ Widget::Widget(QWidget *parent)
     , ui(new Ui::Widget)
 {
     ui->setupUi(this);
+
+    ui->labelMode->setText("Mode:");
+    connect6 = nullptr;
 }
 
 Widget::~Widget()
@@ -41,12 +44,15 @@ void Widget::paintEvent(QPaintEvent *event)
         }
     }
 
+    if(connect6 == nullptr)
+        return;
+
     // 바둑 알 두기
     for(int y = 0; y < 19; y++)
     {
         for(int x = 0; x < 19; x++)
         {
-            Connect6::Piece piece = connect6.getPiece(x, y);
+            Connect6::Piece piece = connect6->getPiece(x, y);
             if(piece == Connect6::BLACK)
             {
                 painter.setPen(QPen(Qt::black, 35, Qt::SolidLine, Qt::RoundCap));
@@ -60,25 +66,8 @@ void Widget::paintEvent(QPaintEvent *event)
         }
     }
 
-    // 모드 표시
-    switch(connect6.getMode())
-    {
-    case Connect6::NOT:
-        ui->labelMode->setText("Mode: ");
-        break;
-    case Connect6::SOLO:
-        ui->labelMode->setText("Mode: SOLO");
-        break;
-    case Connect6::DUO:
-        ui->labelMode->setText("Mode: DUO");
-        break;
-    case Connect6::CPUNET:
-        ui->labelMode->setText("Mode: CPUNET");
-        break;
-    }
-
     // 상태 표시
-    switch(connect6.getStatus())
+    switch(connect6->getStatus())
     {
     case Connect6::READY:
         ui->labelStatus->setText("Status: READY");
@@ -95,7 +84,7 @@ void Widget::paintEvent(QPaintEvent *event)
     }
 
     // 턴 표시
-    Connect6::Piece piece = connect6.whosTurn();
+    Connect6::Piece piece = connect6->whosTurn();
     if(piece == Connect6::BLACK)
     {
         painter.setPen(QPen(Qt::black, 35, Qt::SolidLine, Qt::RoundCap));
@@ -116,25 +105,63 @@ void Widget::mousePressEvent(QMouseEvent *event)
     ui->lcdX->display(event->x());
     ui->lcdY->display(event->y());
 
-    connect6.setPiece(x, y);
+    if(connect6 == nullptr)
+        return;
 
+    connect6->putPiece(x, y);
     update();
 }
 
 void Widget::on_btnReset_clicked()
 {
-    connect6.reset();
-    ui->btnSolo->setEnabled(true);
+    if(connect6 != nullptr)
+    {
+        delete connect6;
+        connect6 = nullptr;
+    }
+
+    ui->labelMode->setText("Mode:");
+    ui->labelStatus->setText("Status:");
+    ui->btnSoloB->setEnabled(true);
+    ui->btnSoloW->setEnabled(true);
     ui->btnDuo->setEnabled(true);
     ui->btnCpuNet->setEnabled(true);
+
     update();
 }
 
 void Widget::on_btnDuo_clicked()
 {
-    connect6.startDuo();
-    ui->btnSolo->setEnabled(false);
+    connect6 = new Connect6Duo;
+
+    ui->labelMode->setText("Mode: DUO");
+    ui->btnSoloB->setEnabled(false);
+    ui->btnSoloW->setEnabled(false);
+    ui->btnDuo->setEnabled(false);
+    ui->btnCpuNet->setEnabled(false);
+
+    update();
+}
+/*
+void Widget::on_btnSoloB_clicked()
+{
+    ui->labelMode->setText("Mode: SOLO");
+    connect6->startSoloB();
+    ui->btnSoloB->setEnabled(false);
+    ui->btnSoloW->setEnabled(false);
     ui->btnDuo->setEnabled(false);
     ui->btnCpuNet->setEnabled(false);
     update();
 }
+
+void Widget::on_btnSoloW_clicked()
+{
+    ui->labelMode->setText("Mode: SOLO");
+    connect6->startSoloW();
+    ui->btnSoloB->setEnabled(false);
+    ui->btnSoloW->setEnabled(false);
+    ui->btnDuo->setEnabled(false);
+    ui->btnCpuNet->setEnabled(false);
+    update();
+}
+*/
