@@ -55,28 +55,60 @@ void Connect6Solo::putPiece(int x, int y)
         count--;
     }
 
-    // 컴퓨터 차례
-    else if(status == ING && turn == cpuColor)
-    {
-        //autoSetPiece();
-        count = 0;
-    }
-
     if(isEnd(turn, x, y))
     {
         status = END;
     }
 
+    // 사람이 다 뒀으면 컴퓨터가 둔다.
     if(count == 0)
     {
-        changeTurn();
+        autoSetPiece();
         count = 2;
     }
 }
 
 // 항상 감사하십시오 Human.
-void Connect6Solo::autoSetPiece(int x1, int y1, int x2, int y2)
+void Connect6Solo::autoSetPiece()
 {
+    int maxX[2] = {0, 0};
+    int maxY[2] = {0, 0};
+    int firstWeight = 0;
+    int secondWeight = 0;
+
+    for(int r = 0; r < BOARDSIZE; r++)
+    {
+        for(int c = 0; c < BOARDSIZE; c++)
+        {
+            if (board[r][c] != EMPTY)
+                continue;
+
+            int curWeight = weight[r][c];
+            if(curWeight < secondWeight)
+                continue;
+
+            // 2등보다 크면
+            secondWeight = curWeight;
+            maxX[0] = c;
+            maxY[0] = r;
+
+            if(secondWeight < firstWeight)
+                continue;
+
+            // 1등보다도 크면
+            swap(&firstWeight, &secondWeight);
+            swap(&maxX[0], &maxX[1]);
+            swap(&maxY[0], &maxY[1]);
+        }
+    }
+
+    // cpu가 둔것도 isEnd 시켜줘야 하므로
+    setPiece(cpuColor, maxX[1], maxY[1]);
+    if(isEnd(cpuColor, maxX[1], maxY[1]))
+        status = END;
+    setPiece(cpuColor, maxX[0], maxY[0]);
+    if(isEnd(cpuColor, maxX[0], maxY[0]))
+        status = END;
 }
 
 void Connect6Solo::updateWeight(Piece color, int x, int y)
@@ -129,6 +161,7 @@ void Connect6Solo::updateWeight(Piece color, int x, int y)
     if(r < BOARDSIZE && -1 < c)
         weight[r][c] += ne+sw+1;
 
+    /*
     // 디버그용
     for(r = 0; r < BOARDSIZE; r++)
     {
@@ -136,4 +169,12 @@ void Connect6Solo::updateWeight(Piece color, int x, int y)
             std::cout << (int)weight[r][c] << " ";
         std::cout << std::endl;
     }
+    */
+}
+
+void Connect6Solo::swap(int* a, int* b)
+{
+    int temp = *a;
+    *a = *b;
+    *b = temp;
 }

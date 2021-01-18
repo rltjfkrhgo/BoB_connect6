@@ -16,8 +16,10 @@ private:
 
     char weight[BOARDSIZE][BOARDSIZE];
 
-    void autoSetPiece(int x1, int y1, int x2, int y2);
+    void autoSetPiece();
     void updateWeight(Piece color, int x, int y);
+
+    void swap(int* a, int* b);
 };
 
 #endif // CONNECT6SOLO_H
