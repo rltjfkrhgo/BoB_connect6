@@ -142,11 +142,12 @@ void Widget::on_btnDuo_clicked()
 
     update();
 }
-/*
+
 void Widget::on_btnSoloB_clicked()
 {
+    connect6 = new Connect6Solo(Connect6::BLACK);
+
     ui->labelMode->setText("Mode: SOLO");
-    connect6->startSoloB();
     ui->btnSoloB->setEnabled(false);
     ui->btnSoloW->setEnabled(false);
     ui->btnDuo->setEnabled(false);
@@ -156,12 +157,12 @@ void Widget::on_btnSoloB_clicked()
 
 void Widget::on_btnSoloW_clicked()
 {
+    connect6 = new Connect6Solo(Connect6::WHITE);
+
     ui->labelMode->setText("Mode: SOLO");
-    connect6->startSoloW();
     ui->btnSoloB->setEnabled(false);
     ui->btnSoloW->setEnabled(false);
     ui->btnDuo->setEnabled(false);
     ui->btnCpuNet->setEnabled(false);
     update();
 }
-*/

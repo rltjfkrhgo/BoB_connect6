@@ -8,6 +8,7 @@
 
 #include "Connect6.h"
 #include "Connect6Duo.h"
+#include "Connect6Solo.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class Widget; }
@@ -42,5 +43,7 @@ protected:
 private slots:
     void on_btnReset_clicked();
     void on_btnDuo_clicked();
+    void on_btnSoloB_clicked();
+    void on_btnSoloW_clicked();
 };
 #endif // WIDGET_H

@@ -2,7 +2,7 @@
 
 Connect6::Connect6()
 {
-    for(int y = 0; y < BOARDSIZE;y++)
+    for(int y = 0; y < BOARDSIZE; y++)
     {
         for(int x = 0; x < BOARDSIZE; x++)
         {
