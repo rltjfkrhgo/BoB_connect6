@@ -5,6 +5,7 @@
 
 #include <QPainter>
 #include <QMouseEvent>
+#include <QMessageBox>
 
 #include "Connect6.h"
 #include "Connect6Duo.h"

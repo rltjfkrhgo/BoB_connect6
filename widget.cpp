@@ -79,6 +79,8 @@ void Widget::paintEvent(QPaintEvent *event)
         ui->labelStatus->setText("Status: ING");
         break;
     case Connect6::END:
+        //QMessageBox box;
+        //box.information(nullptr, "Game Over", "text");
         ui->labelStatus->setText("Status: END");
         break;
     }
@@ -101,9 +103,6 @@ void Widget::mousePressEvent(QMouseEvent *event)
     // 격자 근처에서만 반응하게 고쳐야 하는데... 너모 어렵담.
     int x = (event->x() + (RECTSIZE/2) - BOARD_X) / RECTSIZE;
     int y = (event->y() + (RECTSIZE/2) - BOARD_Y) / RECTSIZE;
-
-    ui->lcdX->display(event->x());
-    ui->lcdY->display(event->y());
 
     if(connect6 == nullptr)
         return;

@@ -13,26 +13,6 @@
   <property name="windowTitle">
    <string>Widget</string>
   </property>
-  <widget class="QLCDNumber" name="lcdX">
-   <property name="geometry">
-    <rect>
-     <x>1050</x>
-     <y>300</y>
-     <width>191</width>
-     <height>81</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLCDNumber" name="lcdY">
-   <property name="geometry">
-    <rect>
-     <x>1050</x>
-     <y>390</y>
-     <width>191</width>
-     <height>81</height>
-    </rect>
-   </property>
-  </widget>
   <widget class="QLabel" name="labelTurn">
    <property name="geometry">
     <rect>
@@ -145,7 +125,7 @@
    <property name="geometry">
     <rect>
      <x>1050</x>
-     <y>570</y>
+     <y>650</y>
      <width>211</width>
      <height>51</height>
     </rect>
@@ -196,6 +176,81 @@
    </property>
    <property name="text">
     <string>1(W) : CPU(B)</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="ipInput">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="geometry">
+    <rect>
+     <x>1050</x>
+     <y>490</y>
+     <width>211</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>나눔고딕</family>
+     <pointsize>16</pointsize>
+    </font>
+   </property>
+   <property name="toolTip">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
+   <property name="text">
+    <string>IP</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="portInput">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="geometry">
+    <rect>
+     <x>1050</x>
+     <y>570</y>
+     <width>211</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>나눔고딕</family>
+     <pointsize>16</pointsize>
+    </font>
+   </property>
+   <property name="toolTip">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
+   <property name="text">
+    <string>Port</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="nameInput">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="geometry">
+    <rect>
+     <x>1050</x>
+     <y>410</y>
+     <width>211</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>나눔고딕</family>
+     <pointsize>16</pointsize>
+    </font>
+   </property>
+   <property name="toolTip">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
+   <property name="text">
+    <string>name</string>
    </property>
   </widget>
  </widget>
