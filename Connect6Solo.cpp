@@ -43,6 +43,7 @@ void Connect6Solo::putPiece(int x, int y)
     if(status == START && userColor == BLACK)
     {
         setPiece(BLACK, x, y);
+        updateWeight(userColor, x, y);
         count = 0;
         status = ING;
     }
