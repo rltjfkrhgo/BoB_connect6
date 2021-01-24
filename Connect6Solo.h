@@ -6,13 +6,16 @@
 class Connect6Solo : public Connect6
 {
 public:
-    Connect6Solo(Piece color);
+    enum Who {CPU, HUMAN};
+
+    Connect6Solo(Piece userColor);
 
     void putPiece(int x, int y) override;
 
 private:
     Piece cpuColor;
     Piece userColor;
+    Who   turn;
 
     char weight[BOARDSIZE][BOARDSIZE];
 

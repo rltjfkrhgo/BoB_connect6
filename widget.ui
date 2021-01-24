@@ -13,25 +13,6 @@
   <property name="windowTitle">
    <string>Widget</string>
   </property>
-  <widget class="QLabel" name="labelTurn">
-   <property name="geometry">
-    <rect>
-     <x>840</x>
-     <y>250</y>
-     <width>71</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <family>나눔고딕</family>
-     <pointsize>16</pointsize>
-    </font>
-   </property>
-   <property name="text">
-    <string>Turn</string>
-   </property>
-  </widget>
   <widget class="Line" name="line">
    <property name="geometry">
     <rect>
@@ -50,7 +31,7 @@
     <rect>
      <x>840</x>
      <y>170</y>
-     <width>211</width>
+     <width>421</width>
      <height>31</height>
     </rect>
    </property>
@@ -61,7 +42,7 @@
     </font>
    </property>
    <property name="text">
-    <string>Status</string>
+    <string>Status:</string>
    </property>
   </widget>
   <widget class="QPushButton" name="btnReset">
@@ -145,7 +126,7 @@
     <rect>
      <x>840</x>
      <y>90</y>
-     <width>211</width>
+     <width>421</width>
      <height>31</height>
     </rect>
    </property>
@@ -156,7 +137,7 @@
     </font>
    </property>
    <property name="text">
-    <string>Status</string>
+    <string>Mode:</string>
    </property>
   </widget>
   <widget class="QPushButton" name="btnSoloW">

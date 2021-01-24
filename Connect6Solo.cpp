@@ -15,15 +15,15 @@ Connect6Solo::Connect6Solo(Piece userColor)
     status = START;
     this->userColor = userColor;
 
-    // 사람이 후공이면 컴퓨터가 첫 수를 둔다.
+    // 사람이 흰돌이면 컴퓨터는 흑돌이고 첫 수를 둔다.
     if(userColor == WHITE)
     {
         cpuColor = BLACK;
         setPiece(BLACK, 9, 9);
-        status = ING;
         changeTurn();
     }
 
+    // 사람이 검은돌이면 컴퓨터는 흰돌
     else
     {
         cpuColor = WHITE;
@@ -32,41 +32,48 @@ Connect6Solo::Connect6Solo(Piece userColor)
 
 void Connect6Solo::putPiece(int x, int y)
 {
-    static int count = 2;
-
     if(x < -1 || BOARDSIZE-1 < x
     || y < -1 || BOARDSIZE-1 < y)
         return;
     if(board[y][x] != EMPTY)
         return;
 
+    // 사람이 검은돌이고 첫 수를 둘 때
     if(status == START && userColor == BLACK)
     {
         setPiece(BLACK, x, y);
         updateWeight(userColor, x, y);
-        count = 0;
-        status = ING;
     }
 
-    // 사람 차례
-    else if(status == ING && turn == userColor)
+    // 사람이 검은돌이고 검은돌 차례일 때
+    else if(userColor == BLACK &&
+            (status == BLACK1 || status == BLACK2) )
     {
-        setPiece(turn, x, y);
+        setPiece(BLACK, x, y);
         updateWeight(userColor, x, y);
-        count--;
+
+        if(isEnd(BLACK, x, y))  status = BLACKWIN;
     }
 
-    if(isEnd(turn, x, y))
+    // 사람이 흰돌이고 흰돌 차례일 때
+    else if(userColor == WHITE &&
+            (status == WHITE1 || status == WHITE2) )
     {
-        status = END;
+        setPiece(WHITE, x, y);
+        updateWeight(userColor, x, y);
+
+        if(isEnd(WHITE, x, y))  status = WHITEWIN;
     }
+
+    changeTurn();
 
     // 사람이 다 뒀으면 컴퓨터가 둔다.
-    if(count == 0)
+    if( (cpuColor == BLACK && status == BLACK1) ||
+        (cpuColor == WHITE && status == WHITE1) )
     {
         autoSetPiece();
-        count = 2;
     }
+
 }
 
 // 항상 감사하십시오 Human.
@@ -105,11 +112,24 @@ void Connect6Solo::autoSetPiece()
 
     // cpu가 둔것도 isEnd 시켜줘야 하므로
     setPiece(cpuColor, maxX[1], maxY[1]);
+    changeTurn();
     if(isEnd(cpuColor, maxX[1], maxY[1]))
-        status = END;
+    {
+        if(cpuColor == BLACK)
+            status = BLACKWIN;
+        else
+            status = WHITEWIN;
+    }
+
     setPiece(cpuColor, maxX[0], maxY[0]);
+    changeTurn();
     if(isEnd(cpuColor, maxX[0], maxY[0]))
-        status = END;
+    {
+        if(cpuColor == BLACK)
+            status = BLACKWIN;
+        else
+            status = WHITEWIN;
+    }
 }
 
 void Connect6Solo::updateWeight(Piece color, int x, int y)
@@ -161,16 +181,6 @@ void Connect6Solo::updateWeight(Piece color, int x, int y)
     c = x-se-1;
     if(r < BOARDSIZE && -1 < c)
         weight[r][c] += ne+sw+1;
-
-    /*
-    // 디버그용
-    for(r = 0; r < BOARDSIZE; r++)
-    {
-        for(c = 0; c < BOARDSIZE; c++)
-            std::cout << (int)weight[r][c] << " ";
-        std::cout << std::endl;
-    }
-    */
 }
 
 void Connect6Solo::swap(int* a, int* b)

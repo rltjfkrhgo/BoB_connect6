@@ -73,39 +73,37 @@ void Widget::paintEvent(QPaintEvent *event)
         ui->labelStatus->setText("Status: READY");
         break;
     case Connect6::START:
-        ui->labelStatus->setText("Status: START");
+        ui->labelStatus->setText("Status: 첫 수를 둡니다...");
         break;
-    case Connect6::ING:
-        ui->labelStatus->setText("Status: ING");
+    case Connect6::BLACK1:
+        ui->labelStatus->setText("Status: 검은돌의 1개 째...");
         break;
-    case Connect6::END:
-        //QMessageBox box;
-        //box.information(nullptr, "Game Over", "text");
-        ui->labelStatus->setText("Status: END");
+    case Connect6::BLACK2:
+        ui->labelStatus->setText("Status: 검은돌의 2개 째...");
+        break;
+    case Connect6::WHITE1:
+        ui->labelStatus->setText("Status: 흰돌의 1개 째...");
+        break;
+    case Connect6::WHITE2:
+        ui->labelStatus->setText("Status: 흰돌의 2개 째...");
+        break;
+    case Connect6::BLACKWIN:
+        ui->labelStatus->setText("Status: 검은돌 승리!");
+        break;
+    case Connect6::WHITEWIN:
+        ui->labelStatus->setText("Status: 흰돌 승리!");
         break;
     }
-
-    // 턴 표시
-    Connect6::Piece piece = connect6->whosTurn();
-    if(piece == Connect6::BLACK)
-    {
-        painter.setPen(QPen(Qt::black, 35, Qt::SolidLine, Qt::RoundCap));
-    }
-    else if(piece == Connect6::WHITE)
-    {
-        painter.setPen(QPen(Qt::white, 35, Qt::SolidLine, Qt::RoundCap));
-    }
-    painter.drawPoint(TURN_X, TURN_Y);
 }
 
 void Widget::mousePressEvent(QMouseEvent *event)
 {
+    if(connect6 == nullptr)
+        return;
+
     // 격자 근처에서만 반응하게 고쳐야 하는데... 너모 어렵담.
     int x = (event->x() + (RECTSIZE/2) - BOARD_X) / RECTSIZE;
     int y = (event->y() + (RECTSIZE/2) - BOARD_Y) / RECTSIZE;
-
-    if(connect6 == nullptr)
-        return;
 
     connect6->putPiece(x, y);
     update();
@@ -133,7 +131,7 @@ void Widget::on_btnDuo_clicked()
 {
     connect6 = new Connect6Duo;
 
-    ui->labelMode->setText("Mode: DUO");
+    ui->labelMode->setText("Mode: 둘이서");
     ui->btnSoloB->setEnabled(false);
     ui->btnSoloW->setEnabled(false);
     ui->btnDuo->setEnabled(false);
@@ -146,7 +144,7 @@ void Widget::on_btnSoloB_clicked()
 {
     connect6 = new Connect6Solo(Connect6::BLACK);
 
-    ui->labelMode->setText("Mode: SOLO");
+    ui->labelMode->setText("Mode: 혼자서 당신은 검은돌");
     ui->btnSoloB->setEnabled(false);
     ui->btnSoloW->setEnabled(false);
     ui->btnDuo->setEnabled(false);
@@ -158,7 +156,7 @@ void Widget::on_btnSoloW_clicked()
 {
     connect6 = new Connect6Solo(Connect6::WHITE);
 
-    ui->labelMode->setText("Mode: SOLO");
+    ui->labelMode->setText("Mode: 혼자서 당신은 흰돌");
     ui->btnSoloB->setEnabled(false);
     ui->btnSoloW->setEnabled(false);
     ui->btnDuo->setEnabled(false);

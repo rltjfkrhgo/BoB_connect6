@@ -7,35 +7,31 @@ Connect6Duo::Connect6Duo()
 
 void Connect6Duo::putPiece(int x, int y)
 {
-    static int count = 2;
-
     if(x < -1 || BOARDSIZE-1 < x
     || y < -1 || BOARDSIZE-1 < y)
         return;
     if(board[y][x] != EMPTY)
         return;
 
+    // 첫 수 놓기
     if(status == START)
+        setPiece(BLACK, x, y);
+
+    // 검은돌 차례
+    else if(status == BLACK1 ||
+            status == BLACK2)
     {
         setPiece(BLACK, x, y);
-        count = 0;
-        status = ING;
+        if(isEnd(BLACK, x, y))  status = BLACKWIN;
     }
 
-    else if(status == ING)
+    // 흰돌 차례
+    else if(status == WHITE1 ||
+            status == WHITE2)
     {
-        setPiece(turn, x, y);
-        count--;
+        setPiece(WHITE, x, y);
+        if(isEnd(WHITE, x, y))  status = WHITEWIN;
     }
 
-    if(isEnd(turn, x, y))
-    {
-        status = END;
-    }
-
-    if(count == 0)
-    {
-        changeTurn();
-        count = 2;
-    }
+    changeTurn();
 }

@@ -11,17 +11,11 @@ Connect6::Connect6()
     }
 
     status = READY;
-    turn = BLACK;
 }
 
 Connect6::Piece Connect6::getPiece(int x, int y)
 {
     return board[y][x];
-}
-
-Connect6::Piece Connect6::whosTurn()
-{
-    return turn;
 }
 
 Connect6::Status Connect6::getStatus()
@@ -49,10 +43,16 @@ int Connect6::setPiece(Piece color, int x, int y)
 
 void Connect6::changeTurn()
 {
-    if(turn == BLACK)
-        turn = WHITE;
-    else if(turn == WHITE)
-        turn = BLACK;
+    if(status == START)
+        status = WHITE1;
+    else if(status == WHITE1)
+        status = WHITE2;
+    else if(status == WHITE2)
+        status = BLACK1;
+    else if(status == BLACK1)
+        status = BLACK2;
+    else if(status == BLACK2)
+        status = WHITE1;
 }
 
 bool Connect6::isEnd(Piece color, int x, int y)
