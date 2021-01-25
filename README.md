@@ -8,4 +8,4 @@ BoB 9기 보안제품트랙 경연단계
 
 ## 스샷
 
-!(img/screenshot.png)
+![screenshot](img/screenshot.png)
