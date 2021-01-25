@@ -73,19 +73,19 @@ void Widget::paintEvent(QPaintEvent *event)
         ui->labelStatus->setText("Status: READY");
         break;
     case Connect6::START:
-        ui->labelStatus->setText("Status: 첫 수를 둡니다...");
+        ui->labelStatus->setText("Status: 검은돌 차례 첫수");
         break;
     case Connect6::BLACK1:
-        ui->labelStatus->setText("Status: 검은돌의 1개 째...");
+        ui->labelStatus->setText("Status: 검은돌 차례 1/2");
         break;
     case Connect6::BLACK2:
-        ui->labelStatus->setText("Status: 검은돌의 2개 째...");
+        ui->labelStatus->setText("Status: 검은돌 차례 2/2");
         break;
     case Connect6::WHITE1:
-        ui->labelStatus->setText("Status: 흰돌의 1개 째...");
+        ui->labelStatus->setText("Status: 흰돌 차례 1/2");
         break;
     case Connect6::WHITE2:
-        ui->labelStatus->setText("Status: 흰돌의 2개 째...");
+        ui->labelStatus->setText("Status: 흰돌 차례 2/2");
         break;
     case Connect6::BLACKWIN:
         ui->labelStatus->setText("Status: 검은돌 승리!");
@@ -144,7 +144,7 @@ void Widget::on_btnSoloB_clicked()
 {
     connect6 = new Connect6Solo(Connect6::BLACK);
 
-    ui->labelMode->setText("Mode: 혼자서 당신은 검은돌");
+    ui->labelMode->setText("Mode: 당신은 검은돌");
     ui->btnSoloB->setEnabled(false);
     ui->btnSoloW->setEnabled(false);
     ui->btnDuo->setEnabled(false);
@@ -156,7 +156,7 @@ void Widget::on_btnSoloW_clicked()
 {
     connect6 = new Connect6Solo(Connect6::WHITE);
 
-    ui->labelMode->setText("Mode: 혼자서 당신은 흰돌");
+    ui->labelMode->setText("Mode: 당신은 흰돌");
     ui->btnSoloB->setEnabled(false);
     ui->btnSoloW->setEnabled(false);
     ui->btnDuo->setEnabled(false);

@@ -1,7 +1,5 @@
 #include "Connect6Solo.h"
 
-#include <iostream>
-
 Connect6Solo::Connect6Solo(Piece userColor)
 {
     for(int y = 0; y < BOARDSIZE; y++)
@@ -84,6 +82,7 @@ void Connect6Solo::autoSetPiece()
     int firstWeight = 0;
     int secondWeight = 0;
 
+    // 최대 weight를 찾음
     for(int r = 0; r < BOARDSIZE; r++)
     {
         for(int c = 0; c < BOARDSIZE; c++)
