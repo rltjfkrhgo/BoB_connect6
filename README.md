@@ -9,3 +9,5 @@ BoB 9기 보안제품트랙 경연단계
 ## 스샷
 
 ![screenshot](img/screenshot.png)
+
+진짜 디자인 구리다...
