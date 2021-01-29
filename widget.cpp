@@ -163,3 +163,17 @@ void Widget::on_btnSoloW_clicked()
     ui->btnCpuNet->setEnabled(false);
     update();
 }
+
+void Widget::on_btnCpuNet_clicked()
+{
+    std::string  name = ui->nameInput->text().toStdString();
+    std::string    ip = ui->  ipInput->text().toStdString();
+    std::string  port = ui->portInput->text().toStdString();
+
+    ui->labelMode->setText("Mode: CPU vs Network");
+    ui->btnSoloB->setEnabled(false);
+    ui->btnSoloW->setEnabled(false);
+    ui->btnDuo->setEnabled(false);
+    ui->btnCpuNet->setEnabled(false);
+    update();
+}

@@ -17,6 +17,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     Connect6.cpp \
+    Connect6CpuNet.cpp \
     Connect6Duo.cpp \
     Connect6Solo.cpp \
     Connect6_count.cpp \
@@ -25,6 +26,7 @@ SOURCES += \
 
 HEADERS += \
     Connect6.h \
+    Connect6CpuNet.h \
     Connect6Duo.h \
     Connect6Solo.h \
     widget.h
@@ -36,3 +38,10 @@ FORMS += \
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/lib/ -lconnect6_protocol
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/lib/ -lconnect6_protocol
+else:unix: LIBS += -L$$PWD/lib/ -lconnect6_protocol
+
+INCLUDEPATH += $$PWD/lib
+DEPENDPATH += $$PWD/lib

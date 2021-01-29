@@ -7,6 +7,8 @@
 #include <QMouseEvent>
 #include <QMessageBox>
 
+#include <string>
+
 #include "Connect6.h"
 #include "Connect6Duo.h"
 #include "Connect6Solo.h"
@@ -46,5 +48,6 @@ private slots:
     void on_btnDuo_clicked();
     void on_btnSoloB_clicked();
     void on_btnSoloW_clicked();
+    void on_btnCpuNet_clicked();
 };
 #endif // WIDGET_H
