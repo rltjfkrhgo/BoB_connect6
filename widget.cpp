@@ -166,9 +166,11 @@ void Widget::on_btnSoloW_clicked()
 
 void Widget::on_btnCpuNet_clicked()
 {
-    std::string  name = ui->nameInput->text().toStdString();
-    std::string    ip = ui->  ipInput->text().toStdString();
-    std::string  port = ui->portInput->text().toStdString();
+    QString  name = ui->nameInput->text();
+    QString    ip = ui->  ipInput->text();
+    QString  port = ui->portInput->text();
+
+    connect6 = new Connect6CpuNet(name, ip, port);
 
     ui->labelMode->setText("Mode: CPU vs Network");
     ui->btnSoloB->setEnabled(false);

@@ -1,4 +1,4 @@
-QT       += core gui
+QT       += core gui network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -29,6 +29,7 @@ HEADERS += \
     Connect6CpuNet.h \
     Connect6Duo.h \
     Connect6Solo.h \
+    connect6_protocol.h \
     widget.h
 
 FORMS += \
@@ -45,3 +46,6 @@ else:unix: LIBS += -L$$PWD/lib/ -lconnect6_protocol
 
 INCLUDEPATH += $$PWD/lib
 DEPENDPATH += $$PWD/lib
+
+DISTFILES += \
+    lib/connect6_protocol.lib

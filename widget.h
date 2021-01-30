@@ -7,11 +7,10 @@
 #include <QMouseEvent>
 #include <QMessageBox>
 
-#include <string>
-
 #include "Connect6.h"
 #include "Connect6Duo.h"
 #include "Connect6Solo.h"
+#include "Connect6CpuNet.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class Widget; }

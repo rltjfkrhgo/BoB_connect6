@@ -181,7 +181,7 @@
     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
    <property name="text">
-    <string/>
+    <string>54.180.149.157</string>
    </property>
    <property name="placeholderText">
     <string>IP</string>
@@ -209,7 +209,7 @@
     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
    <property name="text">
-    <string/>
+    <string>54826</string>
    </property>
    <property name="placeholderText">
     <string>Port</string>
@@ -237,7 +237,7 @@
     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
    <property name="text">
-    <string/>
+    <string>kim</string>
    </property>
    <property name="placeholderText">
     <string>name</string>
