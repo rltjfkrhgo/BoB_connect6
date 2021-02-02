@@ -1,16 +1,10 @@
 #include "Connect6CpuNet.h"
+#include <iostream>
 
-Connect6CpuNet::Connect6CpuNet(QString name, QString ip, QString port)
+Connect6CpuNet::Connect6CpuNet()
 {
-    struct GameStartData startData;
-    startData.req_res_flag = 0x0;
-    startData.name_length = name.length();
-
-
-    socket.connectToHost(ip, port.toInt());
 }
 
 void Connect6CpuNet::putPiece(int x, int y)
 {
-
 }

@@ -9,6 +9,7 @@ Widget::Widget(QWidget *parent)
 
     ui->labelMode->setText("Mode:");
     connect6 = nullptr;
+    socket = nullptr;
 }
 
 Widget::~Widget()
@@ -117,6 +118,12 @@ void Widget::on_btnReset_clicked()
         connect6 = nullptr;
     }
 
+    if(socket != nullptr)
+    {
+        delete socket;
+        socket = nullptr;
+    }
+
     ui->labelMode->setText("Mode:");
     ui->labelStatus->setText("Status:");
     ui->btnSoloB->setEnabled(true);
@@ -157,22 +164,6 @@ void Widget::on_btnSoloW_clicked()
     connect6 = new Connect6Solo(Connect6::WHITE);
 
     ui->labelMode->setText("Mode: 당신은 흰돌");
-    ui->btnSoloB->setEnabled(false);
-    ui->btnSoloW->setEnabled(false);
-    ui->btnDuo->setEnabled(false);
-    ui->btnCpuNet->setEnabled(false);
-    update();
-}
-
-void Widget::on_btnCpuNet_clicked()
-{
-    QString  name = ui->nameInput->text();
-    QString    ip = ui->  ipInput->text();
-    QString  port = ui->portInput->text();
-
-    connect6 = new Connect6CpuNet(name, ip, port);
-
-    ui->labelMode->setText("Mode: CPU vs Network");
     ui->btnSoloB->setEnabled(false);
     ui->btnSoloW->setEnabled(false);
     ui->btnDuo->setEnabled(false);

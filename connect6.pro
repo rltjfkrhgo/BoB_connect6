@@ -22,7 +22,8 @@ SOURCES += \
     Connect6Solo.cpp \
     Connect6_count.cpp \
     main.cpp \
-    widget.cpp
+    widget.cpp \
+    widget_socket.cpp
 
 HEADERS += \
     Connect6.h \

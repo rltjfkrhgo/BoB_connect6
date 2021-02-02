@@ -5,7 +5,7 @@
 
 #include <QPainter>
 #include <QMouseEvent>
-#include <QMessageBox>
+#include <QTcpSocket>
 
 #include "Connect6.h"
 #include "Connect6Duo.h"
@@ -38,6 +38,9 @@ private:
     const int TURN_Y = 270;
 
     Connect6* connect6;  // 바둑판
+    // Connect6Socket* socket;
+    QTcpSocket* socket;
+    uint8_t  playerNum;
 
 protected:
     void paintEvent(QPaintEvent *event);
@@ -48,5 +51,6 @@ private slots:
     void on_btnSoloB_clicked();
     void on_btnSoloW_clicked();
     void on_btnCpuNet_clicked();
+    void recv();
 };
 #endif // WIDGET_H
