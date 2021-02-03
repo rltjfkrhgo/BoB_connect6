@@ -10,6 +10,7 @@ Widget::Widget(QWidget *parent)
     ui->labelMode->setText("Mode:");
     connect6 = nullptr;
     socket = nullptr;
+    ai = nullptr;
 }
 
 Widget::~Widget()
@@ -99,6 +100,8 @@ void Widget::paintEvent(QPaintEvent *event)
 
 void Widget::mousePressEvent(QMouseEvent *event)
 {
+    if(socket != nullptr)
+        return;
     if(connect6 == nullptr)
         return;
 
@@ -122,6 +125,12 @@ void Widget::on_btnReset_clicked()
     {
         delete socket;
         socket = nullptr;
+    }
+
+    if(ai != nullptr)
+    {
+        delete ai;
+        ai = nullptr;
     }
 
     ui->labelMode->setText("Mode:");

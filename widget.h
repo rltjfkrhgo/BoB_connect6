@@ -10,6 +10,7 @@
 #include "Connect6.h"
 #include "Connect6Duo.h"
 #include "Connect6Solo.h"
+#include "Connect6AI.h"
 #include "Connect6CpuNet.h"
 
 QT_BEGIN_NAMESPACE
@@ -38,7 +39,7 @@ private:
     const int TURN_Y = 270;
 
     Connect6* connect6;  // 바둑판
-    // Connect6Socket* socket;
+    Connect6AI* ai;
     QTcpSocket* socket;
     uint8_t  playerNum;
 

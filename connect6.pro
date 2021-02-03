@@ -17,6 +17,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     Connect6.cpp \
+    Connect6AI.cpp \
     Connect6CpuNet.cpp \
     Connect6Duo.cpp \
     Connect6Solo.cpp \
@@ -27,6 +28,7 @@ SOURCES += \
 
 HEADERS += \
     Connect6.h \
+    Connect6AI.h \
     Connect6CpuNet.h \
     Connect6Duo.h \
     Connect6Solo.h \

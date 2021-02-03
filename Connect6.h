@@ -4,6 +4,7 @@
 class Connect6
 {
 public:
+
     enum Piece  {EMPTY, BLACK, WHITE};
     enum Status {READY, START, BLACK1, BLACK2, WHITE1, WHITE2, BLACKWIN, WHITEWIN};  // FSM 같은거
     const static int BOARDSIZE = 19;
