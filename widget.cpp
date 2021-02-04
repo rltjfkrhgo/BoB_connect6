@@ -135,6 +135,7 @@ void Widget::on_btnReset_clicked()
 
     ui->labelMode->setText("Mode:");
     ui->labelStatus->setText("Status:");
+    ui->listNet->clear();
     ui->btnSoloB->setEnabled(true);
     ui->btnSoloW->setEnabled(true);
     ui->btnDuo->setEnabled(true);

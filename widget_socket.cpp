@@ -35,8 +35,8 @@ void Widget::on_btnCpuNet_clicked()
     make_game_start_payload(sendBuff, sizeof(startData), &sendLen, 0x0, startData);
     socket->write((const char*)sendBuff, sendLen);
 
-    ui->labelNet->setText("게임이 시작되기를 기다리는 중...");
-
+    ui->listNet->addItem("게임이 시작되기를 기다리는 중...");
+    ui->listWidget->scrollToBottom();
     update();
 }
 
@@ -58,26 +58,31 @@ void Widget::recv()
     switch(hdr.type)
     {
     case GAME_START:
+    {
         struct GameStartData start;
         game_start_data_parsing(recvBuff+sizeof(hdr), sizeof(start), &start);
         playerNum = hdr.player_num;
-        qDebug() << "나의 번호: " << playerNum;
         if(playerNum == 1)
             ai = new Connect6AI(Connect6::BLACK);
         else
             ai = new Connect6AI(Connect6::WHITE);
         break;
+    }
 
     // PUT을 받는 경우는 첫 수를 대신 뒀을 때만
+    // 따지고 보면 내가 둔거임
     case PUT:
-        ui->labelStatus->setText("시작!");
+    {
+        ui->listNet->addItem("게임이 시작되었습니다!");
         put_turn_data_parsing(recvBuff+sizeof(hdr), sizeof(putTurn), &putTurn);
         connect6->putPiece(putTurn.xy[0], putTurn.xy[1]);
         ai->putPiece(putTurn.xy[0], putTurn.xy[1]);
         break;
+    }
 
     case TURN:
-        ui->labelNet->setText("당신의 차례입니다.");
+    {
+        // 상대가 둔거 업데이트
         put_turn_data_parsing(recvBuff+sizeof(hdr), sizeof(putTurn), &putTurn);
         if(putTurn.coord_num == 2)
         {
@@ -97,8 +102,19 @@ void Widget::recv()
         update();
 
         // 내가 둘 차례!
+        ui->listNet->addItem("당신의 차례입니다.");
+        ui->listNet->scrollToBottom();
         int x1, y1, x2, y2;
         ai->getNextPut(&x1, &y1, &x2, &y2);
+
+        connect6->putPiece(x1, y1);
+        connect6->putPiece(x2, y2);
+        ai->putPiece(x1, y1);
+        ai->putPiece(x2, y2);
+
+        time_t t = time(NULL);
+        while(time(NULL) - t < 1) {}
+
         putTurn.coord_num = 2;
         putTurn.xy[0] = x1;
         putTurn.xy[1] = y1;
@@ -107,20 +123,22 @@ void Widget::recv()
         make_put_payload(sendBuff, sizeof(sendBuff), &sendLen, playerNum, putTurn);
         socket->write((const char*)sendBuff, sendLen);
 
-        connect6->putPiece(x1, y1);
-        connect6->putPiece(x2, y2);
-        ai->putPiece(x1, y1);
-        ai->putPiece(x2, y2);
-
-
-        ui->labelNet->setText("상대의 차례입니다.");
-        break;
-
-    case GAME_OVER:
-        ui->labelNet->setText("게임이 끝났습니다.");
-        break;
-    default:
+        ui->listNet->addItem("상대의 차례입니다.");
+        ui->listNet->scrollToBottom();
         break;
     }
 
+    case GAME_OVER:
+    {
+        ui->listNet->addItem("게임이 끝났습니다.");
+        ui->listNet->scrollToBottom();
+        struct GameOverData over;
+        game_over_data_parsing(recvBuff+sizeof(hdr), sizeof(over), &over);
+        break;
+    }
+
+    default:
+        break;
+    }
+    update();
 }
