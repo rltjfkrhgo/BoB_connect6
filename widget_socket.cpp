@@ -36,7 +36,7 @@ void Widget::on_btnCpuNet_clicked()
     socket->write((const char*)sendBuff, sendLen);
 
     ui->listNet->addItem("게임이 시작되기를 기다리는 중...");
-    ui->listWidget->scrollToBottom();
+    ui->listNet->scrollToBottom();
     update();
 }
 

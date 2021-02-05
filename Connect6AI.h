@@ -11,15 +11,17 @@ public:
     void putPiece(int x, int y) override;
 
     void updateWeight(int x, int y);
+    void updateAiWeight(int x, int y);
     void getNextPut(int *x1, int *y1, int* x2, int* y2);
 
 private:
     //Connect6& connect6;
 
-    Piece aiColor;
-    Piece humanColor;
+    Piece  aiColor;
+    Piece  humanColor;
 
-    char weight[BOARDSIZE][BOARDSIZE];
+    char  weight[BOARDSIZE][BOARDSIZE];
+    char  aiWeight[BOARDSIZE][BOARDSIZE];
 
     void swap(int* a, int* b);
 };
