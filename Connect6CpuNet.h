@@ -12,6 +12,8 @@ public:
     Connect6CpuNet();
 
     void putPiece(int x, int y) override;
+
+
 };
 
 #endif // CONNECT6CPUNET_H

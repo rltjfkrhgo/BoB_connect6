@@ -20,17 +20,18 @@ SOURCES += \
     Connect6AI.cpp \
     Connect6CpuNet.cpp \
     Connect6Duo.cpp \
+    Connect6Socket.cpp \
     Connect6Solo.cpp \
     Connect6_count.cpp \
     main.cpp \
-    widget.cpp \
-    widget_socket.cpp
+    widget.cpp
 
 HEADERS += \
     Connect6.h \
     Connect6AI.h \
     Connect6CpuNet.h \
     Connect6Duo.h \
+    Connect6Socket.h \
     Connect6Solo.h \
     connect6_protocol.h \
     widget.h

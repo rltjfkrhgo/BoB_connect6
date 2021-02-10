@@ -1,22 +1,18 @@
-#include "widget.h"
-#include "ui_widget.h"
+#include "Connect6Socket.h"
 
-// 네트워크 관련된 부분
-// 따로 분리하고 싶었는데... 잘 안됨 ㅠㅠ
-
-void Widget::on_btnCpuNet_clicked()
+Connect6Socket::Connect6Socket(QString myname, QString ip, QString port, Connect6* connect6)
 {
-    connect6 = new Connect6CpuNet;
+    memset(recvBuff, 0, BUFFSIZE);
+    memset(sendBuff, 0, BUFFSIZE);
+    recvLen = 0;
+    sendLen = 0;
 
-    ui->labelMode->setText("Mode: CPU vs Network");
-    ui->btnSoloB->setEnabled(false);
-    ui->btnSoloW->setEnabled(false);
-    ui->btnDuo->setEnabled(false);
-    ui->btnCpuNet->setEnabled(false);
+    this->myname = myname;
 
-    QString  name = ui->nameInput->text();
-    QString    ip = ui->  ipInput->text();
-    QString  port = ui->portInput->text();
+    isRunning = true;
+
+    this->connect6 = connect6;
+    ai = nullptr;
 
     socket = new QTcpSocket(this);
     connect(socket,SIGNAL(readyRead()),this,SLOT(recv()));
@@ -27,23 +23,27 @@ void Widget::on_btnCpuNet_clicked()
     // 게임 시작 요청
     struct GameStartData startData;
     startData.req_res_flag = 0x0;
-    startData.name_length = name.length();
-    sprintf(startData.name, "%s", name.toStdString().c_str());
+    startData.name_length = myname.length();
+    sprintf(startData.name, "%s", myname.toStdString().c_str());
 
-    uchar sendBuff[256] = {0, };
     size_t sendLen;
     make_game_start_payload(sendBuff, sizeof(startData), &sendLen, 0x0, startData);
     socket->write((const char*)sendBuff, sendLen);
 
-    ui->listNet->addItem("게임이 시작되기를 기다리는 중...");
-    ui->listNet->scrollToBottom();
-    update();
+    emit sendMsg("게임이 시작되기를 기다리는 중...");
 }
 
-void Widget::recv()
+Connect6Socket::~Connect6Socket()
+{
+    if (socket != nullptr)
+        delete socket;
+    if (ai != nullptr)
+        delete ai;
+}
+
+void Connect6Socket::recv()
 {
     // 소켓으로 부터 읽어온다.
-    uchar recvBuff[256] = {0, };
     socket->read( (char*)recvBuff, sizeof(recvBuff) );
 
     // 헤더 부분 파싱
@@ -52,20 +52,24 @@ void Widget::recv()
 
     struct PutTurnData putTurn;
 
-    uchar   sendBuff[256] = {0, };
-    size_t  sendLen = 0;
-
     switch(hdr.type)
     {
     case GAME_START:
     {
         struct GameStartData start;
         game_start_data_parsing(recvBuff+sizeof(hdr), sizeof(start), &start);
-        playerNum = hdr.player_num;
-        if(playerNum == 1)
+        mynumber = hdr.player_num;
+        if(mynumber == 1)
+        {  // 내가 검정
             ai = new Connect6AI(Connect6::BLACK);
+            emit sendMsg("당신은 검은색입니다.");
+        }
         else
+        {  // 내가 흰색
             ai = new Connect6AI(Connect6::WHITE);
+            emit sendMsg("당신은 흰색입니다.");
+        }
+        othername = start.name;
         break;
     }
 
@@ -73,10 +77,10 @@ void Widget::recv()
     // 따지고 보면 내가 둔거임
     case PUT:
     {
-        ui->listNet->addItem("게임이 시작되었습니다!");
         put_turn_data_parsing(recvBuff+sizeof(hdr), sizeof(putTurn), &putTurn);
         connect6->putPiece(putTurn.xy[0], putTurn.xy[1]);
         ai->putPiece(putTurn.xy[0], putTurn.xy[1]);
+        emit sendMsg("상대가 수를 두는 중...");
         break;
     }
 
@@ -99,46 +103,44 @@ void Widget::recv()
             ai->putPiece(putTurn.xy[0], putTurn.xy[1]);
             ai->updateWeight(putTurn.xy[0], putTurn.xy[1]);
         }
-        update();
 
         // 내가 둘 차례!
-        ui->listNet->addItem("당신의 차례입니다.");
-        ui->listNet->scrollToBottom();
+        emit sendMsg("내가 수를 두는 중...");
+
         int x1, y1, x2, y2;
         ai->getNextPut(&x1, &y1, &x2, &y2);
+
+        time_t t = time(NULL);
+        while(time(NULL) - t < 1) {}
 
         connect6->putPiece(x1, y1);
         connect6->putPiece(x2, y2);
         ai->putPiece(x1, y1);
         ai->putPiece(x2, y2);
 
-        time_t t = time(NULL);
-        while(time(NULL) - t < 1) {}
-
+        // PUT 패킷 전송
         putTurn.coord_num = 2;
         putTurn.xy[0] = x1;
         putTurn.xy[1] = y1;
         putTurn.xy[2] = x2;
         putTurn.xy[3] = y2;
-        make_put_payload(sendBuff, sizeof(sendBuff), &sendLen, playerNum, putTurn);
+        make_put_payload(sendBuff, sizeof(sendBuff), &sendLen, mynumber, putTurn);
         socket->write((const char*)sendBuff, sendLen);
 
-        ui->listNet->addItem("상대의 차례입니다.");
-        ui->listNet->scrollToBottom();
+        emit sendMsg("상대가 수를 두는 중...");
         break;
     }
 
     case GAME_OVER:
     {
-        ui->listNet->addItem("게임이 끝났습니다.");
-        ui->listNet->scrollToBottom();
         struct GameOverData over;
         game_over_data_parsing(recvBuff+sizeof(hdr), sizeof(over), &over);
+        emit sendMsg("게임이 끝났습니다.");
+        isRunning = false;
         break;
     }
 
     default:
         break;
-    }
-    update();
+    }  // switch
 }

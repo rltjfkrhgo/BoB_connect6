@@ -7,10 +7,10 @@ Widget::Widget(QWidget *parent)
 {
     ui->setupUi(this);
 
+    setWindowTitle("connect6");
     ui->labelMode->setText("Mode:");
     connect6 = nullptr;
     socket = nullptr;
-    ai = nullptr;
 }
 
 Widget::~Widget()
@@ -127,15 +127,10 @@ void Widget::on_btnReset_clicked()
         socket = nullptr;
     }
 
-    if(ai != nullptr)
-    {
-        delete ai;
-        ai = nullptr;
-    }
-
     ui->labelMode->setText("Mode:");
     ui->labelStatus->setText("Status:");
     ui->listNet->clear();
+
     ui->btnSoloB->setEnabled(true);
     ui->btnSoloW->setEnabled(true);
     ui->btnDuo->setEnabled(true);
@@ -178,5 +173,34 @@ void Widget::on_btnSoloW_clicked()
     ui->btnSoloW->setEnabled(false);
     ui->btnDuo->setEnabled(false);
     ui->btnCpuNet->setEnabled(false);
+    update();
+}
+
+// 네트워크 관련된 부분
+void Widget::on_btnCpuNet_clicked()
+{
+    connect6 = new Connect6CpuNet;
+
+    ui->labelMode->setText("Mode: CPU vs Network");
+    ui->btnSoloB->setEnabled(false);
+    ui->btnSoloW->setEnabled(false);
+    ui->btnDuo->setEnabled(false);
+    ui->btnCpuNet->setEnabled(false);
+
+    QString  name = ui->nameInput->text();
+    QString    ip = ui->  ipInput->text();
+    QString  port = ui->portInput->text();
+
+    socket = new Connect6Socket(name, ip, port, connect6);
+    connect(socket, SIGNAL(sendMsg(QString)), this, SLOT(recvMsg(QString)));
+
+    update();
+}
+
+void Widget:: recvMsg(QString msg)
+{
+    qDebug() << msg;
+    ui->listNet->addItem(msg);
+    ui->listNet->scrollToBottom();
     update();
 }

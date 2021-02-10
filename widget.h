@@ -12,6 +12,7 @@
 #include "Connect6Solo.h"
 #include "Connect6AI.h"
 #include "Connect6CpuNet.h"
+#include "Connect6Socket.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class Widget; }
@@ -39,9 +40,7 @@ private:
     const int TURN_Y = 270;
 
     Connect6* connect6;  // 바둑판
-    Connect6AI* ai;
-    QTcpSocket* socket;
-    uint8_t  playerNum;
+    Connect6Socket* socket;
 
 protected:
     void paintEvent(QPaintEvent *event);
@@ -52,6 +51,6 @@ private slots:
     void on_btnSoloB_clicked();
     void on_btnSoloW_clicked();
     void on_btnCpuNet_clicked();
-    void recv();
+    void recvMsg(QString msg);
 };
 #endif // WIDGET_H
