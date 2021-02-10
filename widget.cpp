@@ -129,7 +129,7 @@ void Widget::on_btnReset_clicked()
 
     ui->labelMode->setText("Mode:");
     ui->labelStatus->setText("Status:");
-    ui->listNet->clear();
+    ui->labelNet->setText("");
 
     ui->btnSoloB->setEnabled(true);
     ui->btnSoloW->setEnabled(true);
@@ -199,8 +199,6 @@ void Widget::on_btnCpuNet_clicked()
 
 void Widget:: recvMsg(QString msg)
 {
-    qDebug() << msg;
-    ui->listNet->addItem(msg);
-    ui->listNet->scrollToBottom();
-    update();
+    ui->labelNet->setText(msg);
+    repaint();
 }
