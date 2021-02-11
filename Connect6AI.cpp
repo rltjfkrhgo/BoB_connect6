@@ -1,6 +1,6 @@
 #include "Connect6AI.h"
 
-Connect6AI::Connect6AI(Piece aiColor)
+Connect6AI::Connect6AI(Piece aiColor, Connect6* connect6)
 {
     for(int y = 0; y < BOARDSIZE; y++)
     {
@@ -19,6 +19,8 @@ Connect6AI::Connect6AI(Piece aiColor)
     }
 
     status = START;
+
+    this->connect6 = connect6;
 
     if(aiColor == BLACK)
     {
@@ -52,6 +54,26 @@ void Connect6AI::putPiece(int x, int y)
 
     changeTurn();
 }
+
+
+void Connect6AI::updateWeight()
+{
+    for(int y = 0; y < Connect6::BOARDSIZE; y++)
+    {
+        for(int x = 0; x < Connect6::BOARDSIZE; x++)
+        {
+            // 돌이 놓여진 칸은 볼 필요가 없다.
+            if (connect6->board[y][x] != EMPTY)
+                weight[y][x] = 0;
+            else
+            {
+                weight[y][x] = getRadialMax(humanColor, x, y) + 4;
+                weight[y][x] += getRadialMax(aiColor, x, y);
+            }
+        }
+    }
+}
+
 
 // 항상 감사하십시오 Human.
 void Connect6AI::getNextPut(int *x1, int *y1, int* x2, int* y2)
@@ -109,6 +131,7 @@ void Connect6AI::getNextPut(int *x1, int *y1, int* x2, int* y2)
     *x2 = maxX[0];
     *y2 = maxY[0];
 }
+
 
 // 사람이 x, y에 뒀을 때 wight를 갱신
 void Connect6AI::updateWeight(int x, int y)
@@ -212,6 +235,37 @@ void Connect6AI::updateAiWeight(int x, int y)
     c = x-se-1;
     if(r < BOARDSIZE && -1 < c)
         aiWeight[r][c] += ne+sw+1;
+}
+
+
+// ========== private function
+
+// board[y][x]의 주위의 count 중 max 값
+char Connect6AI::getRadialMax(Connect6::Piece color, int x, int y)
+{
+    int  n = connect6->countN(color, x, y);
+    int  s = connect6->countS(color, x, y);
+    int  w = connect6->countW(color, x, y);
+    int  e = connect6->countE(color, x, y);
+    int nw = connect6->countNW(color, x, y);
+    int ne = connect6->countNE(color, x, y);
+    int sw = connect6->countSW(color, x, y);
+    int se = connect6->countSE(color, x, y);
+
+    int  h = max(n, s);
+    int  v = max(w, e);
+    int rd = max(nw, se);
+    int ld = max(ne, sw);
+
+    return max( max(h, v), max(rd, ld) );
+}
+
+int Connect6AI::max(int a, int b)
+{
+    if(a > b)
+        return a;
+    else
+        return b;
 }
 
 void Connect6AI::swap(int* a, int* b)

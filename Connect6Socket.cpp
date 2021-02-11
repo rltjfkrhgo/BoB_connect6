@@ -61,12 +61,12 @@ void Connect6Socket::recv()
         mynumber = hdr.player_num;
         if(mynumber == 1)
         {  // 내가 검정
-            ai = new Connect6AI(Connect6::BLACK);
+            ai = new Connect6AI(Connect6::BLACK, connect6);
             emit sendMsg("당신은 검은색입니다.");
         }
         else
         {  // 내가 흰색
-            ai = new Connect6AI(Connect6::WHITE);
+            ai = new Connect6AI(Connect6::WHITE, connect6);
             emit sendMsg("당신은 흰색입니다.");
         }
         othername = start.name;
@@ -94,14 +94,13 @@ void Connect6Socket::recv()
             connect6->putPiece(putTurn.xy[2], putTurn.xy[3]);
             ai->putPiece(putTurn.xy[0], putTurn.xy[1]);
             ai->putPiece(putTurn.xy[2], putTurn.xy[3]);
-            ai->updateWeight(putTurn.xy[0], putTurn.xy[1]);
-            ai->updateWeight(putTurn.xy[2], putTurn.xy[3]);
+            ai->updateWeight();
         }
         else  // 내가 흰색이면 처음에 저쪽에서 1개만 둠
         {
             connect6->putPiece(putTurn.xy[0], putTurn.xy[1]);
             ai->putPiece(putTurn.xy[0], putTurn.xy[1]);
-            ai->updateWeight(putTurn.xy[0], putTurn.xy[1]);
+            ai->updateWeight();
         }
 
         // 내가 둘 차례!

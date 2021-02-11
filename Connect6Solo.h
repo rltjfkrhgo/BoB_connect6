@@ -21,7 +21,11 @@ private:
 
     void autoSetPiece();
     void updateWeight(Piece color, int x, int y);
+    void updateWeight();
 
+    char getRadialMax(Piece color, int x, int y);
+    char getRadialWeightMax(int x, int y);
+    int  max(int a, int b);
     void swap(int* a, int* b);
 };
 

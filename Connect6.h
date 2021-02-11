@@ -1,12 +1,16 @@
 #ifndef CONNECT6_H
 #define CONNECT6_H
 
+class Connect6AI;
+
 class Connect6
 {
 public:
+    friend class Connect6AI;
 
-    enum Piece  {EMPTY, BLACK, WHITE};
-    enum Status {READY, START, BLACK1, BLACK2, WHITE1, WHITE2, BLACKWIN, WHITEWIN};  // FSM 같은거
+    enum Piece   {EMPTY, BLACK, WHITE};
+    enum Status  {READY, START, BLACK1, BLACK2, WHITE1, WHITE2, BLACKWIN, WHITEWIN};  // FSM 같은거
+    enum Compass {N, NE, E, SE, S, SW, W, NW};  // 방향
     const static int BOARDSIZE = 19;
 
     Connect6();

@@ -1,4 +1,5 @@
 #include "Connect6Solo.h"
+#include <stdio.h>
 
 Connect6Solo::Connect6Solo(Piece userColor)
 {
@@ -40,7 +41,7 @@ void Connect6Solo::putPiece(int x, int y)
     if(status == START && userColor == BLACK)
     {
         setPiece(BLACK, x, y);
-        updateWeight(userColor, x, y);
+        updateWeight();
     }
 
     // 사람이 검은돌이고 검은돌 차례일 때
@@ -48,7 +49,7 @@ void Connect6Solo::putPiece(int x, int y)
             (status == BLACK1 || status == BLACK2) )
     {
         setPiece(BLACK, x, y);
-        updateWeight(userColor, x, y);
+        updateWeight();
 
         if(isEnd(BLACK, x, y))  status = BLACKWIN;
     }
@@ -58,7 +59,7 @@ void Connect6Solo::putPiece(int x, int y)
             (status == WHITE1 || status == WHITE2) )
     {
         setPiece(WHITE, x, y);
-        updateWeight(userColor, x, y);
+        updateWeight();
 
         if(isEnd(WHITE, x, y))  status = WHITEWIN;
     }
@@ -180,6 +181,122 @@ void Connect6Solo::updateWeight(Piece color, int x, int y)
     c = x-se-1;
     if(r < BOARDSIZE && -1 < c)
         weight[r][c] += ne+sw+1;
+}
+
+
+void Connect6Solo::updateWeight()
+{
+    for(int y = 0; y < Connect6::BOARDSIZE; y++)
+    {
+        for(int x = 0; x < Connect6::BOARDSIZE; x++)
+        {
+            // 돌이 놓여진 칸은 볼 필요가 없다.
+            if (board[y][x] != EMPTY)
+            {
+                weight[y][x] = 0;
+                continue;
+            }
+
+            // 상대방 꺼
+            int usermax = getRadialMax(userColor, x, y);
+            if (usermax > 0)
+                weight[y][x] = usermax + 4;
+            // 내 꺼
+            weight[y][x] += getRadialMax(cpuColor, x, y);
+        }
+    }
+
+    char tempWeight[Connect6::BOARDSIZE][Connect6::BOARDSIZE] = {0, };
+    // 2칸 떨어진 곳
+    for(int y = 0; y < Connect6::BOARDSIZE; y++)
+    {
+        for(int x = 0; x < Connect6::BOARDSIZE; x++)
+        {
+            // 돌이 놓여진 칸은 볼 필요가 없다.
+            if (board[y][x] != EMPTY)
+                continue;
+            else if (weight[y][x] == 0)
+                tempWeight[y][x] = max(getRadialWeightMax(x, y)-1, 0);
+        }
+    }
+
+    // temp와 합치기
+    for(int y = 0; y < Connect6::BOARDSIZE; y++)
+    {
+        for(int x = 0; x < Connect6::BOARDSIZE; x++)
+        {
+            weight[y][x] += tempWeight[y][x];
+        }
+    }
+
+    // 디버그 용
+    for(int y = 0; y < BOARDSIZE; y++)
+    {
+        for(int x = 0; x < BOARDSIZE; x++)
+            printf("%2d ", weight[y][x]);
+        printf("\n");
+    }
+    printf("\n");
+}
+
+// board[y][x]의 주위의 count 중 max 값
+char Connect6Solo::getRadialMax(Piece color, int x, int y)
+{
+    int  n = countN(color, x, y);
+    int  s = countS(color, x, y);
+    int  w = countW(color, x, y);
+    int  e = countE(color, x, y);
+    int nw = countNW(color, x, y);
+    int ne = countNE(color, x, y);
+    int sw = countSW(color, x, y);
+    int se = countSE(color, x, y);
+
+    int  h = max(n, s);
+    int  v = max(w, e);
+    int rd = max(nw, se);
+    int ld = max(ne, sw);
+
+    return max( max(h, v), max(rd, ld) );
+}
+
+
+char Connect6Solo::getRadialWeightMax(int x, int y)
+{
+    int w[8] = {0, };
+
+    if(0 < y)
+        w[Connect6::N] = weight[y-1][x];
+    if(0 < y && x < Connect6::BOARDSIZE-1)
+        w[Connect6::NE] = weight[y-1][x+1];
+    if(x < Connect6::BOARDSIZE-1)
+        w[Connect6::E] = weight[y][x+1];
+    if(y < Connect6::BOARDSIZE-1 && x < Connect6::BOARDSIZE-1)
+        w[Connect6::SE] = weight[y+1][x+1];
+    if(y < Connect6::BOARDSIZE-1)
+        w[Connect6::S] = weight[y+1][x];
+    if(y < Connect6::BOARDSIZE-1 && 0 < x)
+        w[Connect6::SW] = weight[y+1][x-1];
+    if(0 < x)
+        w[Connect6::W] = weight[y][x-1];
+    if(0 < y && 0 < x)
+        w[Connect6::NW] = weight[y-1][x-1];
+
+    int max = 0;
+    for(int i = 0; i < 8; i++)
+    {
+        if(max < w[i])
+            max = w[i];
+    }
+
+    return max;
+}
+
+int Connect6Solo::max(int a, int b)
+{
+    if(a > b)
+        return a;
+    else
+        return b;
 }
 
 void Connect6Solo::swap(int* a, int* b)
