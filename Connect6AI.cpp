@@ -240,7 +240,7 @@ void Connect6AI::updateAiWeight(int x, int y)
 
 // ========== private function
 
-// board[y][x]의 주위의 count 중 max 값
+// board[y][x]의 반경 1칸의 count 중 max 값
 char Connect6AI::getRadialMax(Connect6::Piece color, int x, int y)
 {
     int  n = connect6->countN(color, x, y);

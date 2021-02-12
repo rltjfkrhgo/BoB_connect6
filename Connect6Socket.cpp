@@ -17,6 +17,8 @@ Connect6Socket::Connect6Socket(QString myname, QString ip, QString port, Connect
     socket = new QTcpSocket(this);
     connect(socket,SIGNAL(readyRead()),this,SLOT(recv()));
 
+    emit sendMsg("연결중...");
+
     // 서버에 연결
     socket->connectToHost(ip, port.toInt());
 
@@ -59,17 +61,19 @@ void Connect6Socket::recv()
         struct GameStartData start;
         game_start_data_parsing(recvBuff+sizeof(hdr), sizeof(start), &start);
         mynumber = hdr.player_num;
+        othername = start.name;
         if(mynumber == 1)
         {  // 내가 검정
             ai = new Connect6AI(Connect6::BLACK, connect6);
-            emit sendMsg("당신은 검은색입니다.");
+            msg = "● " + myname + " vs " + othername + "○\n";
+            emit sendMsg(msg);
         }
         else
         {  // 내가 흰색
             ai = new Connect6AI(Connect6::WHITE, connect6);
-            emit sendMsg("당신은 흰색입니다.");
+            msg = "○ " + myname + " vs " + othername + " ●\n";
+            emit sendMsg(msg);
         }
-        othername = start.name;
         break;
     }
 
@@ -80,7 +84,7 @@ void Connect6Socket::recv()
         put_turn_data_parsing(recvBuff+sizeof(hdr), sizeof(putTurn), &putTurn);
         connect6->putPiece(putTurn.xy[0], putTurn.xy[1]);
         ai->putPiece(putTurn.xy[0], putTurn.xy[1]);
-        emit sendMsg("상대가 수를 두는 중...");
+        emit sendMsg(msg + "상대가 수를 두는 중...");
         break;
     }
 
@@ -104,7 +108,7 @@ void Connect6Socket::recv()
         }
 
         // 내가 둘 차례!
-        emit sendMsg("내가 수를 두는 중...");
+        emit sendMsg(msg + "내가 수를 두는 중...");
 
         int x1, y1, x2, y2;
         ai->getNextPut(&x1, &y1, &x2, &y2);
@@ -126,7 +130,7 @@ void Connect6Socket::recv()
         make_put_payload(sendBuff, sizeof(sendBuff), &sendLen, mynumber, putTurn);
         socket->write((const char*)sendBuff, sendLen);
 
-        emit sendMsg("상대가 수를 두는 중...");
+        emit sendMsg(msg + "상대가 수를 두는 중...");
         break;
     }
 
@@ -134,7 +138,10 @@ void Connect6Socket::recv()
     {
         struct GameOverData over;
         game_over_data_parsing(recvBuff+sizeof(hdr), sizeof(over), &over);
-        emit sendMsg("게임이 끝났습니다.");
+        if(hdr.player_num == mynumber)
+            emit sendMsg("이겼어요!!");
+        else
+            emit sendMsg("졌어요 ㅠㅠ");
         isRunning = false;
         break;
     }

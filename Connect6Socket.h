@@ -27,8 +27,8 @@ private:
     QString  ip;
     QString  port;
     QString  othername;  // 상대방 이름
-
     uint8_t  mynumber;
+    QString  msg;  // sendMsg에 이용할 변수
 
     Connect6*   connect6;
     Connect6AI* ai;
