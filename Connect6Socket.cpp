@@ -65,7 +65,7 @@ void Connect6Socket::recv()
         if(mynumber == 1)
         {  // 내가 검정
             ai = new Connect6AI(Connect6::BLACK, connect6);
-            msg = "● " + myname + " vs " + othername + "○\n";
+            msg = "● " + myname + " vs " + othername + " ○\n";
             emit sendMsg(msg);
         }
         else
@@ -83,7 +83,6 @@ void Connect6Socket::recv()
     {
         put_turn_data_parsing(recvBuff+sizeof(hdr), sizeof(putTurn), &putTurn);
         connect6->putPiece(putTurn.xy[0], putTurn.xy[1]);
-        ai->putPiece(putTurn.xy[0], putTurn.xy[1]);
         emit sendMsg(msg + "상대가 수를 두는 중...");
         break;
     }
@@ -96,14 +95,11 @@ void Connect6Socket::recv()
         {
             connect6->putPiece(putTurn.xy[0], putTurn.xy[1]);
             connect6->putPiece(putTurn.xy[2], putTurn.xy[3]);
-            ai->putPiece(putTurn.xy[0], putTurn.xy[1]);
-            ai->putPiece(putTurn.xy[2], putTurn.xy[3]);
             ai->updateWeight();
         }
         else  // 내가 흰색이면 처음에 저쪽에서 1개만 둠
         {
             connect6->putPiece(putTurn.xy[0], putTurn.xy[1]);
-            ai->putPiece(putTurn.xy[0], putTurn.xy[1]);
             ai->updateWeight();
         }
 
@@ -118,8 +114,6 @@ void Connect6Socket::recv()
 
         connect6->putPiece(x1, y1);
         connect6->putPiece(x2, y2);
-        ai->putPiece(x1, y1);
-        ai->putPiece(x2, y2);
 
         // PUT 패킷 전송
         putTurn.coord_num = 2;

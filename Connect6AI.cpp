@@ -1,5 +1,7 @@
 #include "Connect6AI.h"
+#include <vector>
 #include <stdio.h>
+#include <qDebug>
 
 Connect6AI::Connect6AI(Piece aiColor, Connect6* connect6)
 {
@@ -10,8 +12,6 @@ Connect6AI::Connect6AI(Piece aiColor, Connect6* connect6)
             weight[y][x] = 0;
         }
     }
-
-    status = START;
 
     this->connect6 = connect6;
 
@@ -26,7 +26,7 @@ Connect6AI::Connect6AI(Piece aiColor, Connect6* connect6)
         this->humanColor = BLACK;
     }
 
-    isKillGak = false;
+    isAiKillGak = false;
 }
 
 void Connect6AI::putPiece(int x, int y)
@@ -50,7 +50,7 @@ void Connect6AI::putPiece(int x, int y)
     changeTurn();
 }
 
-
+/*
 void Connect6AI::updateWeight()
 {
     // 초기화
@@ -133,6 +133,143 @@ void Connect6AI::updateWeight()
     }
     printf("\n");
 }
+*/
+
+void Connect6AI::updateWeight()
+{
+    std::vector<int> emptyX;  // EMPTY인 X좌표들
+    std::vector<int> emptyY;  // EMPTY인 Y좌표들  그냥 구조체 쓸걸 ㅅㅂ
+
+    // 보드판 복사, weight 초기화, 빈칸 조사
+    for(int y = 0; y < BOARDSIZE; y++)
+    {
+        for(int x = 0; x < BOARDSIZE; x++)
+        {
+            board[y][x] = connect6->board[y][x];
+            weight[y][x] = 0;
+            if(EMPTY == connect6->board[y][x])
+            {
+                emptyX.push_back(x);
+                emptyY.push_back(y);
+            }
+        }
+    }
+
+    // 내 킬각 재기
+    // 각나오면 가중치 최대로 주고 리턴
+    for(int idx1 = 0; idx1 < emptyX.size(); idx1++)
+    {
+        int x1 = emptyX[idx1];
+        int y1 = emptyY[idx1];
+        for(int idx2 = 0; idx2 < emptyX.size(); idx2++)
+        {
+            int x2 = emptyX[idx2];
+            int y2 = emptyY[idx2];  // 빈칸 중 다른 하나
+
+            // 놓아본다.
+            setPiece(aiColor, x1, y1);
+            setPiece(aiColor, x2, y2);
+
+            // 이겼나 확인해본다.
+            bool ret1 = isEnd(aiColor, x1, y1);
+            bool ret2 = isEnd(aiColor, x2, y2);
+
+            // 킬 각 나왔으면
+            if(ret1 || ret2)
+            {
+                weight[y1][x1] = 120;
+                weight[y2][x2] = 120;
+                return;
+            }
+
+            // 아니면 원복
+            board[y2][x2] = EMPTY;
+            board[y1][x1] = EMPTY;
+        }
+    }
+
+    // 상대가 1개만으로 끝낼 수 있는지 확인
+    for(int idx = 0; idx < emptyX.size(); idx++)
+    {
+        int x = emptyX[idx];
+        int y = emptyY[idx];  // 빈칸 중 하나
+        setPiece(humanColor, x, y);  // 놓아본다.
+        if(isEnd(humanColor, x, y))  // 끝났나?
+            weight[y][x] = 110;
+        setPiece(EMPTY, x, y);  // 원복
+    }
+
+    int value = 100;
+    // 상대가 2개만으로 끝낼 수 있는지 확인
+    for(int idx1 = 0; idx1 < emptyX.size(); idx1++)
+    {
+        int x1 = emptyX[idx1];
+        int y1 = emptyY[idx1];
+        for(int idx2 = 0; idx2 < emptyX.size(); idx2++)
+        {
+            int x2 = emptyX[idx2];
+            int y2 = emptyY[idx2];  // 빈칸 중 다른 하나
+
+            // 놓아본다.
+            setPiece(humanColor, x1, y1);
+            setPiece(humanColor, x2, y2);
+
+            // 이겼나 확인해본다.
+            bool ret1 = isEnd(humanColor, x1, y1);
+            bool ret2 = isEnd(humanColor, x2, y2);
+
+            // 킬 각 나왔으면
+            if(ret1 || ret2)
+            {
+                weight[y1][x1] = max(weight[y1][x1], value);
+                weight[y2][x2] = max(weight[y2][x2], value);
+                value--;
+            }
+
+            // 아니면 원복
+            setPiece(EMPTY, x2, y2);
+            setPiece(EMPTY, x1, y1);
+        }
+    }
+
+    for(int y = 0; y < BOARDSIZE; y++)
+    {
+        for(int x = 0; x < BOARDSIZE; x++)
+        {
+            weight[y][x] = getRadialMax(humanColor, x, y);
+        }
+    }
+
+    // 디버그 용
+    for(int y = 0; y < BOARDSIZE; y++)
+    {
+        for(int x = 0; x < BOARDSIZE; x++)
+            printf("%2d ", weight[y][x]);
+        printf("\n");
+    }
+    printf("\n");
+}
+
+// board[y][x]의 주위의 count 중 max 값
+char Connect6AI::getRadialMax(Connect6::Piece color, int x, int y)
+{
+    int  n = connect6->countN(color, x, y);
+    int  s = connect6->countS(color, x, y);
+    int  w = connect6->countW(color, x, y);
+    int  e = connect6->countE(color, x, y);
+    int nw = connect6->countNW(color, x, y);
+    int ne = connect6->countNE(color, x, y);
+    int sw = connect6->countSW(color, x, y);
+    int se = connect6->countSE(color, x, y);
+
+    int  h = max(n, s);
+    int  v = max(w, e);
+    int rd = max(nw, se);
+    int ld = max(ne, sw);
+
+    return max( max(h, v), max(rd, ld) );
+}
+
 
 
 // 항상 감사하십시오 Human.
@@ -143,44 +280,30 @@ void Connect6AI::getNextPut(int *x1, int *y1, int* x2, int* y2)
     int maxY[2] = {0, 0};
     int firstWeight = 0;
     int secondWeight = 0;
-    int firstAiWeight = 0;
-    int secondAiWeight = 0;
 
     // 최대 weight를 찾음
     for(int r = 0; r < BOARDSIZE; r++)
     {
         for(int c = 0; c < BOARDSIZE; c++)
         {
-            if(board[r][c] != EMPTY)
+            if(connect6->board[r][c] != EMPTY)
                 continue;
 
             int curWeight = weight[r][c];
-            int curAiWeight = 0;
 
             if(curWeight < secondWeight)
                 continue;
 
-            // 2등이랑 같은데 aiWeight는 작다면 스킵
-            else if(curWeight == secondWeight &&
-                    curAiWeight < secondAiWeight)
-                continue;
-
-            // 2등보다 크던지 aiWeight가 더 크면
+            // 2등보다 크면
             secondWeight = curWeight;
-            secondAiWeight = curAiWeight;
             maxX[0] = c;
             maxY[0] = r;
 
             if(secondWeight < firstWeight)
                 continue;
 
-            else if(curWeight == firstWeight &&
-                    curAiWeight < firstAiWeight)
-                continue;
-
-            // 1등보다 크거나 aiWeight가 더 크면
+            // 1등보다 크면
             swap(&firstWeight, &secondWeight);
-            swap(&firstAiWeight, &secondAiWeight);
             swap(&maxX[0], &maxX[1]);
             swap(&maxY[0], &maxY[1]);
         }
@@ -194,6 +317,8 @@ void Connect6AI::getNextPut(int *x1, int *y1, int* x2, int* y2)
 
 
 // ========== private function ==========
+
+
 
 
 // 한 줄만 보자...
@@ -223,7 +348,7 @@ void Connect6AI::updateLineWeight(Connect6::Piece boardLine[], char weightLine[]
     // 아직 킬각이 안 떴었고
     // 1칸 이상 비어있고 4개 이상 내 돌이 있으면
     // 킬각을 살핀다.
-    if(isKillGak == false)
+    if(isAiKillGak == false)
     {
         if(0 < numOfEmpty && 4 <= numOfai)
         {
@@ -252,7 +377,7 @@ void Connect6AI::updateLineWeight(Connect6::Piece boardLine[], char weightLine[]
                     {
                         weightLine[idxA] = 120;
                         weightLine[idxB] = 120;
-                        isKillGak = true;
+                        isAiKillGak = true;
                         break;
                     }
                     // 놓았던거 다시 원복
@@ -262,13 +387,13 @@ void Connect6AI::updateLineWeight(Connect6::Piece boardLine[], char weightLine[]
                         boardLine[idxB] = Connect6::EMPTY;
                     }
                 }
-                if(isKillGak)
+                if(isAiKillGak)
                     break;
             }
         }
     }  // if(isKillGak == false)
 
-    if(isKillGak)
+    if(isAiKillGak)
         return;
 
     // 상대방 돌에 따라 weight 업데이트
@@ -302,9 +427,6 @@ void Connect6AI::updateLineWeight(Connect6::Piece boardLine[], char weightLine[]
     }
 
 }
-
-
-
 
 
 // 한 줄만 가져오자...

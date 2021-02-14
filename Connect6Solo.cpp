@@ -35,7 +35,6 @@ void Connect6Solo::putPiece(int x, int y)
     if(status == START && humanColor == BLACK)
     {
         setPiece(BLACK, x, y);
-        ai->updateWeight();
     }
 
     // 사람이 검은돌이고 검은돌 차례일 때
@@ -43,9 +42,6 @@ void Connect6Solo::putPiece(int x, int y)
             (status == BLACK1 || status == BLACK2) )
     {
         setPiece(BLACK, x, y);
-        if(status == BLACK2)
-            ai->updateWeight();
-
         if(isEnd(BLACK, x, y))  status = BLACKWIN;
     }
 
@@ -54,9 +50,6 @@ void Connect6Solo::putPiece(int x, int y)
             (status == WHITE1 || status == WHITE2) )
     {
         setPiece(WHITE, x, y);
-        if(status == WHITE2)
-            ai->updateWeight();
-
         if(isEnd(WHITE, x, y))  status = WHITEWIN;
     }
 
@@ -74,6 +67,8 @@ void Connect6Solo::putPiece(int x, int y)
 // 항상 감사하십시오 Human.
 void Connect6Solo::autoSetPiece()
 {
+    ai->updateWeight();  // 갱신
+
     int x1, y1, x2, y2;
     ai->getNextPut(&x1, &y1, &x2, &y2);
 

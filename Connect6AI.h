@@ -12,19 +12,18 @@ public:
 
     void updateWeight();
 
-    void updateWeight(int x, int y);
-    void updateAiWeight(int x, int y);
+    char getRadialMax(Connect6::Piece color, int x, int y);
     void getNextPut(int *x1, int *y1, int* x2, int* y2);
 
 private:
     Connect6* connect6;
 
-    Piece  aiColor;
-    Piece  humanColor;
+    Connect6::Piece  aiColor;
+    Connect6::Piece  humanColor;
 
-    char  weight[BOARDSIZE][BOARDSIZE];
+    char  weight[Connect6::BOARDSIZE][Connect6::BOARDSIZE];
 
-    bool isKillGak;
+    bool isAiKillGak;
     void updateLineWeight(Connect6::Piece boardLine[], char weightLine[], int len);
     void copyBoardLineH(int x, int y, Connect6::Piece boardLine[], int* len);
     void copyBoardLineV(int x, int y, Connect6::Piece boardLine[], int* len);
