@@ -50,7 +50,8 @@ void Connect6Solo::putPiece(int x, int y)
             (status == BLACK1 || status == BLACK2) )
     {
         setPiece(BLACK, x, y);
-        updateWeight();
+        if(status == BLACK2)
+            updateWeight();
 
         if(isEnd(BLACK, x, y))  status = BLACKWIN;
     }
@@ -60,7 +61,8 @@ void Connect6Solo::putPiece(int x, int y)
             (status == WHITE1 || status == WHITE2) )
     {
         setPiece(WHITE, x, y);
-        updateWeight();
+        if(status == WHITE2)
+            updateWeight();
 
         if(isEnd(WHITE, x, y))  status = WHITEWIN;
     }
@@ -187,52 +189,76 @@ void Connect6Solo::updateWeight(Piece color, int x, int y)
 
 void Connect6Solo::updateWeight()
 {
-    for(int y = 0; y < Connect6::BOARDSIZE; y++)
+    // 초기화
+    for(int y = 0; y < BOARDSIZE; y++)
     {
-        for(int x = 0; x < Connect6::BOARDSIZE; x++)
-        {
-            // 돌이 놓여진 칸은 볼 필요가 없다.
-            if (board[y][x] != EMPTY)
-            {
-                weight[y][x] = 0;
-                continue;
-            }
-
-            // 상대방 꺼
-            // 반경 1칸 내의 상대방의 count
-            int humanMax = getRadialMax(humanColor, x, y);
-            if (humanMax > 0)
-                weight[y][x] = humanMax;
-            else
-                weight[y][x] = 0;
-
-            // 내 꺼
-            //weight[y][x] += getRadialMax(cpuColor, x, y);
-        }
+        for(int x = 0; x < BOARDSIZE; x++)
+            weight[y][x] = 0;
     }
 
-    char tempWeight[Connect6::BOARDSIZE][Connect6::BOARDSIZE] = {{0}, };
-    // 반경 2칸
-    for(int y = 0; y < Connect6::BOARDSIZE; y++)
+    // 가로 줄
+    for(int y = 0; y < BOARDSIZE; y++)
     {
-        for(int x = 0; x < Connect6::BOARDSIZE; x++)
-        {
-            // 돌이 놓여진 칸은 볼 필요가 없다.
-            if (board[y][x] != EMPTY)
-                continue;
-            else if (weight[y][x] == 0)
-                tempWeight[y][x] = max(getRadialWeightMax(x, y)-1, 0);
-        }
+        Connect6::Piece boardLine[BOARDSIZE] = {Connect6::EMPTY, };
+        int len = 0;
+        copyBoardLineH(0, y, boardLine, &len);  // 가로 1줄 복사
+        char weightLine[BOARDSIZE] = {0, };
+        updateLineWeight(boardLine, weightLine, len);  // weight 계산
+        pasteWeightLineH(0, y, weightLine);  // 전체 weight에 반영
     }
 
-    // temp와 합치기
-    for(int y = 0; y < Connect6::BOARDSIZE; y++)
+    // 세로 줄
+    for(int x = 0; x < BOARDSIZE; x++)
     {
-        for(int x = 0; x < Connect6::BOARDSIZE; x++)
-        {
-            weight[y][x] += tempWeight[y][x];
-        }
+        Connect6::Piece boardLine[BOARDSIZE] = {Connect6::EMPTY, };
+        int len = 0;
+        copyBoardLineV(x, 0, boardLine, &len);  // 세로 1줄 복사
+        char weightLine[BOARDSIZE] = {0, };
+        updateLineWeight(boardLine, weightLine, len);  // weight 계산
+        pasteWeightLineV(x, 0, weightLine);  // 전체 weight에 반영
     }
+
+    // RD 대각선
+    for(int x = BOARDSIZE-1; -1 < x; x--)
+    {
+        Connect6::Piece boardLine[BOARDSIZE] = {Connect6::EMPTY, };
+        int len = 0;
+        copyBoardLineRD(x, 0, boardLine, &len);  // RD 대각선 1줄 복사
+        char weightLine[BOARDSIZE] = {0, };
+        updateLineWeight(boardLine, weightLine, len);  // weight 계산
+        pasteWeightLineRD(x, 0, weightLine);  // 전체 weight에 반영
+    }
+    for(int y = 1; y < Connect6::BOARDSIZE; y++)
+    {
+        Connect6::Piece boardLine[BOARDSIZE] = {Connect6::EMPTY, };
+        int len = 0;
+        copyBoardLineRD(0, y, boardLine, &len);  // RD 대각선 1줄 복사
+        char weightLine[BOARDSIZE] = {0, };
+        updateLineWeight(boardLine, weightLine, len);  // weight 계산
+        pasteWeightLineRD(0, y, weightLine);  // 전체 weight에 반영
+    }
+
+    // LD 대각선
+    for(int x = 0;x < BOARDSIZE; x++)
+    {
+        Connect6::Piece boardLine[BOARDSIZE] = {Connect6::EMPTY, };
+        int len = 0;
+        copyBoardLineLD(x, 0, boardLine, &len);  // LD 대각선 1줄 복사
+        char weightLine[BOARDSIZE] = {0, };
+        updateLineWeight(boardLine, weightLine, len);  // weight 계산
+        pasteWeightLineLD(x, 0, weightLine);  // 전체 weight에 반영
+    }
+    for(int y = 1; y < BOARDSIZE; y++)
+    {
+        Connect6::Piece boardLine[BOARDSIZE] = {Connect6::EMPTY, };
+        int len = 0;
+        copyBoardLineLD(BOARDSIZE-1, y, boardLine, &len);  // LD 대각선 1줄 복사
+        char weightLine[BOARDSIZE] = {0, };
+        updateLineWeight(boardLine, weightLine, len);  // weight 계산
+        pasteWeightLineLD(BOARDSIZE-1, y, weightLine);  // 전체 weight에 반영
+    }
+
+
 
     // 디버그 용
     for(int y = 0; y < BOARDSIZE; y++)
@@ -245,76 +271,22 @@ void Connect6Solo::updateWeight()
 }
 
 
-
-// board[y][x]의 주위의 count 중 max 값
-char Connect6Solo::getRadialMax(Piece color, int x, int y)
-{
-    int  n = countN(color, x, y);
-    int  s = countS(color, x, y);
-    int  w = countW(color, x, y);
-    int  e = countE(color, x, y);
-    int nw = countNW(color, x, y);
-    int ne = countNE(color, x, y);
-    int sw = countSW(color, x, y);
-    int se = countSE(color, x, y);
-
-    int  h = max(n, s);
-    int  v = max(w, e);
-    int rd = max(nw, se);
-    int ld = max(ne, sw);
-
-    return max( max(h, v), max(rd, ld) );
-}
-
-
-char Connect6Solo::getRadialWeightMax(int x, int y)
-{
-    int w[8] = {0, };
-
-    if(0 < y)
-        w[Connect6::N] = weight[y-1][x];
-    if(0 < y && x < Connect6::BOARDSIZE-1)
-        w[Connect6::NE] = weight[y-1][x+1];
-    if(x < Connect6::BOARDSIZE-1)
-        w[Connect6::E] = weight[y][x+1];
-    if(y < Connect6::BOARDSIZE-1 && x < Connect6::BOARDSIZE-1)
-        w[Connect6::SE] = weight[y+1][x+1];
-    if(y < Connect6::BOARDSIZE-1)
-        w[Connect6::S] = weight[y+1][x];
-    if(y < Connect6::BOARDSIZE-1 && 0 < x)
-        w[Connect6::SW] = weight[y+1][x-1];
-    if(0 < x)
-        w[Connect6::W] = weight[y][x-1];
-    if(0 < y && 0 < x)
-        w[Connect6::NW] = weight[y-1][x-1];
-
-    int max = 0;
-    for(int i = 0; i < 8; i++)
-    {
-        if(max < w[i])
-            max = w[i];
-    }
-
-    return max;
-}
-
-
 // 한 줄만 가져오자...
 // [y][x]를 지나가는 각 방향으로 boardLine에 복사.
 // len은 유효 길이.
-void Connect6Solo::getBoardLineH(int x, int y, Connect6::Piece boardLine[], int* len)
+void Connect6Solo::copyBoardLineH(int x, int y, Connect6::Piece boardLine[], int* len)
 {
-    for(int c = 0; c < BOARDSIZE; c++)
+    for(int c = 0; c < Connect6::BOARDSIZE; c++)
         boardLine[c] = board[y][c];
-    *len = BOARDSIZE;
+    *len = Connect6::BOARDSIZE;
 }
-void Connect6Solo::getBoardLineV(int x, int y, Connect6::Piece boardLine[], int* len)
+void Connect6Solo::copyBoardLineV(int x, int y, Connect6::Piece boardLine[], int* len)
 {
-    for(int r = 0; r < BOARDSIZE; r++)
+    for(int r = 0; r < Connect6::BOARDSIZE; r++)
         boardLine[r] = board[r][x];
-    *len = BOARDSIZE;
+    *len = Connect6::BOARDSIZE;
 }
-void Connect6Solo::getBoardLineRD(int x, int y, Connect6::Piece boardLine[], int* len)
+void Connect6Solo::copyBoardLineRD(int x, int y, Connect6::Piece boardLine[], int* len)
 {
     int idx = 0;
     for(int r = y - min(x, y), c = x - min(x, y);
@@ -326,7 +298,7 @@ void Connect6Solo::getBoardLineRD(int x, int y, Connect6::Piece boardLine[], int
     }
     *len = idx;
 }
-void Connect6Solo::getBoardLineLD(int x, int y, Connect6::Piece boardLine[], int* len)
+void Connect6Solo::copyBoardLineLD(int x, int y, Connect6::Piece boardLine[], int* len)
 {
     int idx = 0;
     for(int r = max(y-(Connect6::BOARDSIZE-1-x), 0), c = min(x+y, Connect6::BOARDSIZE-1);
@@ -339,12 +311,59 @@ void Connect6Solo::getBoardLineLD(int x, int y, Connect6::Piece boardLine[], int
     *len = idx;
 }
 
+
+// 한 줄만 업데이트...
+// [y][x]를 지나가는 각 방향으로 weight를 업데이트. max값.
+// len은 유효 길이.
+void Connect6Solo::pasteWeightLineH(int x, int y, char weightLine[])
+{
+    for(int c = 0; c < BOARDSIZE; c++)
+    {
+        if(weight[y][c] < weightLine[c])
+            weight[y][c] = weightLine[c];
+    }
+}
+void Connect6Solo::pasteWeightLineV(int x, int y, char weightLine[])
+{
+    for(int r = 0; r < Connect6::BOARDSIZE; r++)
+    {
+        if(weight[r][x] < weightLine[r])
+            weight[r][x] = weightLine[r];
+    }
+}
+void Connect6Solo::pasteWeightLineRD(int x, int y, char weightLine[])
+{
+    int idx = 0;
+    for(int r = y - min(x, y), c = x - min(x, y);
+        r < Connect6::BOARDSIZE && c < Connect6::BOARDSIZE;
+        r++, c++)
+    {
+        if(weight[r][c] < weightLine[idx])
+            weight[r][c] = weightLine[idx];
+        idx++;
+    }
+}
+void Connect6Solo::pasteWeightLineLD(int x, int y, char weightLine[])
+{
+    int idx = 0;
+    for(int r = max(y-(Connect6::BOARDSIZE-1-x), 0), c = min(x+y, Connect6::BOARDSIZE-1);
+        r < Connect6::BOARDSIZE && -1 < c;
+        r++, c--)
+    {
+        if(weight[r][c] < weightLine[idx])
+            weight[r][c] = weightLine[idx];
+        idx++;
+    }
+}
+
+
 // 한 줄만 보자...
 void Connect6Solo::updateLineWeight(Connect6::Piece boardLine[], char weightLine[], int len)
 {
     int  emptyIdx[BOARDSIZE] = {0, };  // 비어있는 칸 인덱스
     int  numOfEmpty = 0;  // 비어있는 칸 개수
     int  numOfai = 0;     // AI 돌 개수
+    int  numOfHuman = 0;  // 사람 돌 개수
     for(int i = 0; i < len; i++)
     {
         if(boardLine[i] == Connect6::EMPTY)  // 비어있다면
@@ -354,55 +373,61 @@ void Connect6Solo::updateLineWeight(Connect6::Piece boardLine[], char weightLine
         }
         else if(boardLine[i] == aiColor)  // 나의 돌이라면
             numOfai++;
+        else  // 사람 돌이라면
+            numOfHuman++;
     }
 
     // 놓을 칸이 없으면 리턴
     if(numOfEmpty == 0)
         return;
 
+    // 아직 킬각이 안 떴었고
     // 1칸 이상 비어있고 4개 이상 내 돌이 있으면
     // 킬각을 살핀다.
-    if(0 < numOfEmpty && 4 <= numOfai)
+    if(isKillGak == false)
     {
-        for(int a = 0; a < numOfEmpty; a++)
+        if(0 < numOfEmpty && 4 <= numOfai)
         {
-            int idxA = emptyIdx[a];  // 빈 칸 중 하나
-            for(int b = a; b < numOfEmpty; b++)
+            for(int a = 0; a < numOfEmpty; a++)
             {
-                int idxB = emptyIdx[b];  // 빈 칸 중 다른 하나
-                // 놓아본다.
-                boardLine[idxA] = aiColor;
-                boardLine[idxB] = aiColor;
-                // 이겼나 확인해본다.
-                int count = 0;
-                for(int i = 0; i < len; i++)
+                int idxA = emptyIdx[a];  // 빈 칸 중 하나
+                for(int b = a; b < numOfEmpty; b++)
                 {
-                    if(boardLine[i] == aiColor)
-                        count++;
-                    else
-                        count = 0;
-                    if(count == 6)
+                    int idxB = emptyIdx[b];  // 빈 칸 중 다른 하나
+                    // 놓아본다.
+                    boardLine[idxA] = aiColor;
+                    boardLine[idxB] = aiColor;
+                    // 이겼나 확인해본다.
+                    int count = 0;
+                    for(int i = 0; i < len; i++)
+                    {
+                        if(boardLine[i] == aiColor)
+                            count++;
+                        else
+                            count = 0;
+                        if(count == 6)
+                            break;
+                    }
+                    // 해치웠나?
+                    if(6 <= count)
+                    {
+                        weightLine[idxA] = 120;
+                        weightLine[idxB] = 120;
+                        isKillGak = true;
                         break;
+                    }
+                    // 놓았던거 다시 원복
+                    else
+                    {
+                        boardLine[idxA] = Connect6::EMPTY;
+                        boardLine[idxB] = Connect6::EMPTY;
+                    }
                 }
-                // 해치웠나?
-                if(count == 6)
-                {
-                    weightLine[idxA] = 127;
-                    weightLine[idxB] = 127;
-                    isKillGak = true;
+                if(isKillGak)
                     break;
-                }
-                // 놓았던거 다시 원복
-                else
-                {
-                    boardLine[idxA] = Connect6::EMPTY;
-                    boardLine[idxB] = Connect6::EMPTY;
-                }
             }
-            if(isKillGak)
-                break;
         }
-    }
+    }  // if(isKillGak == false)
 
     if(isKillGak)
         return;
