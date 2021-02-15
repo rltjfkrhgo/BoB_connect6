@@ -246,7 +246,19 @@ void Connect6AI::updateWeight()
     {
         for(int x = 0; x < BOARDSIZE; x++)
         {
-            weight[y][x] = max(weight[y][x], getRadialMax(humanColor, x, y) );
+            int count[8] = {0, };
+            count[0] = countN(humanColor, x, y);
+            count[1] = countNE(humanColor, x, y);
+            count[2] = countE(humanColor, x, y);
+            count[3] = countSE(humanColor, x, y);
+            count[4] = countS(humanColor, x, y);
+            count[5] = countSW(humanColor, x, y);
+            count[6] = countW(humanColor, x, y);
+            count[7] = countNW(humanColor, x, y);
+            for(int i = 0; i < 8; i++)
+            {
+                weight[y][x] += count[i];
+            }
         }
     }
 
