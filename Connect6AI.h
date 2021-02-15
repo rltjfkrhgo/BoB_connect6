@@ -22,6 +22,7 @@ private:
     Connect6::Piece  humanColor;
 
     char  weight[Connect6::BOARDSIZE][Connect6::BOARDSIZE];
+    const static char ONE_COM = 120;
 
     bool isAiKillGak;
     void updateLineWeight(Connect6::Piece boardLine[], char weightLine[], int len);

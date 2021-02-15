@@ -146,9 +146,10 @@ void Connect6AI::updateWeight()
         for(int x = 0; x < BOARDSIZE; x++)
         {
             board[y][x] = connect6->board[y][x];
-            weight[y][x] = 0;
+            weight[y][x] = -1;
             if(EMPTY == connect6->board[y][x])
             {
+                weight[y][x] = 0;
                 emptyX.push_back(x);
                 emptyY.push_back(y);
             }
@@ -177,8 +178,8 @@ void Connect6AI::updateWeight()
             // 킬 각 나왔으면
             if(ret1 || ret2)
             {
-                weight[y1][x1] = 120;
-                weight[y2][x2] = 120;
+                weight[y1][x1] = ONE_COM;
+                weight[y2][x2] = ONE_COM;
                 return;
             }
 
@@ -188,6 +189,8 @@ void Connect6AI::updateWeight()
         }
     }
 
+
+    int count = 2;
     // 상대가 1개만으로 끝낼 수 있는지 확인
     for(int idx = 0; idx < emptyX.size(); idx++)
     {
@@ -195,40 +198,47 @@ void Connect6AI::updateWeight()
         int y = emptyY[idx];  // 빈칸 중 하나
         setPiece(humanColor, x, y);  // 놓아본다.
         if(isEnd(humanColor, x, y))  // 끝났나?
-            weight[y][x] = 110;
-        setPiece(EMPTY, x, y);  // 원복
+        {
+            weight[y][x] = ONE_COM;
+            count--;
+        }
+        else
+            board[y][x] = EMPTY;  // 원복
     }
 
-    int value = 100;
-    // 상대가 2개만으로 끝낼 수 있는지 확인
-    for(int idx1 = 0; idx1 < emptyX.size(); idx1++)
+    if(count > 1)
     {
-        int x1 = emptyX[idx1];
-        int y1 = emptyY[idx1];
-        for(int idx2 = 0; idx2 < emptyX.size(); idx2++)
+        // 상대가 2개만으로 끝낼 수 있는지 확인
+        for(int idx1 = 0; idx1 < emptyX.size(); idx1++)
         {
-            int x2 = emptyX[idx2];
-            int y2 = emptyY[idx2];  // 빈칸 중 다른 하나
-
-            // 놓아본다.
-            setPiece(humanColor, x1, y1);
-            setPiece(humanColor, x2, y2);
-
-            // 이겼나 확인해본다.
-            bool ret1 = isEnd(humanColor, x1, y1);
-            bool ret2 = isEnd(humanColor, x2, y2);
-
-            // 킬 각 나왔으면
-            if(ret1 || ret2)
+            int x1 = emptyX[idx1];
+            int y1 = emptyY[idx1];
+            for(int idx2 = 0; idx2 < emptyX.size(); idx2++)
             {
-                weight[y1][x1] = max(weight[y1][x1], value);
-                weight[y2][x2] = max(weight[y2][x2], value);
-                value--;
-            }
+                int x2 = emptyX[idx2];
+                int y2 = emptyY[idx2];  // 빈칸 중 다른 하나
 
-            // 아니면 원복
-            setPiece(EMPTY, x2, y2);
-            setPiece(EMPTY, x1, y1);
+                // 놓아본다.
+                setPiece(humanColor, x1, y1);
+                setPiece(humanColor, x2, y2);
+
+                // 이겼나 확인해본다.
+                bool ret1 = isEnd(humanColor, x1, y1);
+                bool ret2 = isEnd(humanColor, x2, y2);
+
+                // 킬 각 나왔으면
+                if(ret1 || ret2)
+                {
+                    if(weight[y1][x1] != ONE_COM)
+                        weight[y1][x1] += 10;
+                    if(weight[y2][x2] != ONE_COM)
+                        weight[y2][x2] += 10;
+                }
+
+                // 다시 원복
+                board[y2][x2] = EMPTY;
+                board[y1][x1] = EMPTY;
+            }
         }
     }
 
@@ -236,7 +246,7 @@ void Connect6AI::updateWeight()
     {
         for(int x = 0; x < BOARDSIZE; x++)
         {
-            weight[y][x] = getRadialMax(humanColor, x, y);
+            weight[y][x] = max(weight[y][x], getRadialMax(humanColor, x, y) );
         }
     }
 
