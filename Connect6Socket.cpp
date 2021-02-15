@@ -109,6 +109,7 @@ void Connect6Socket::recv()
         int x1, y1, x2, y2;
         ai->getNextPut(&x1, &y1, &x2, &y2);
 
+        // 극적인 연출을 위한 딜레이
         time_t t = time(NULL);
         while(time(NULL) - t < 1) {}
 

@@ -230,9 +230,9 @@ void Connect6AI::updateWeight()
                 if(ret1 || ret2)
                 {
                     if(weight[y1][x1] != ONE_COM)
-                        weight[y1][x1] += 10;
+                        weight[y1][x1] += 15;
                     if(weight[y2][x2] != ONE_COM)
-                        weight[y2][x2] += 10;
+                        weight[y2][x2] += 15;
                 }
 
                 // 다시 원복
@@ -261,15 +261,6 @@ void Connect6AI::updateWeight()
             }
         }
     }
-
-    // 디버그 용
-    for(int y = 0; y < BOARDSIZE; y++)
-    {
-        for(int x = 0; x < BOARDSIZE; x++)
-            printf("%2d ", weight[y][x]);
-        printf("\n");
-    }
-    printf("\n");
 }
 
 // board[y][x]의 주위의 count 중 max 값
