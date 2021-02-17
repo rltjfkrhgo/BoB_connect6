@@ -255,9 +255,32 @@ void Connect6AI::updateWeight()
             count[5] = countSW(humanColor, x, y);
             count[6] = countW(humanColor, x, y);
             count[7] = countNW(humanColor, x, y);
+            int count1 = 0;
+            int count2 = 0;
+            int count3 = 0;
+            int count4 = 0;
             for(int i = 0; i < 8; i++)
             {
-                weight[y][x] += count[i];
+                if(count[i] >= 4)
+                    count4++;
+                else if(count[i] >= 3)
+                    count3++;
+                else if(count[i] >= 2)
+                    count2++;
+                else if(count[i] >= 1)
+                    count1++;
+            }
+            // 킬각 포인트 아니면
+            if(weight[y][x] != ONE_COM)
+            {
+                if(count4 > 0)
+                    weight[y][x] += 8+count4;
+                else if(count3 > 0)
+                    weight[y][x] += 5+count3;
+                else if(count2 > 0)
+                    weight[y][x] += 2+count2;
+                else if(count1 > 0)
+                    weight[y][x] += count1;
             }
         }
     }

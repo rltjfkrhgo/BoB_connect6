@@ -111,7 +111,7 @@ void Connect6Socket::recv()
 
         // 극적인 연출을 위한 딜레이
         time_t t = time(NULL);
-        while(time(NULL) - t < 1) {}
+        while(time(NULL) - t < 3) {}
 
         connect6->putPiece(x1, y1);
         connect6->putPiece(x2, y2);
