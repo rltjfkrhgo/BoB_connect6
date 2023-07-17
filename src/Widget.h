@@ -4,6 +4,8 @@
 #include <QWidget>
 #include <QtWidgets>
 
+#include "RenderArea.h"
+
 class Widget : public QWidget
 {
     Q_OBJECT
@@ -15,7 +17,13 @@ public:
 private slots:
 
 private:
+    RenderArea* renderArea;
+
     QLabel* statusLabel;
+    QPushButton* duoStartButton;
+    QPushButton* soloBlackStartButton;
+    QPushButton* soloWhiteStartButton;
+    QPushButton* networkStartButton;
 };
 
 #endif // WIDGET_H
