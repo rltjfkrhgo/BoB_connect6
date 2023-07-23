@@ -13,6 +13,10 @@ public:
 
 protected:
     void paintEvent(QPaintEvent* event) override;
+
+private:
+    const QImage blackImg;
+    const QImage whiteImg;
 };
 
 #endif // RENDERAREA_H

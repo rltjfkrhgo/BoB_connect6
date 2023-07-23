@@ -3,7 +3,7 @@
 #include <QPainter>
 
 RenderArea::RenderArea(QWidget *parent)
-    : QWidget(parent)
+    : QWidget(parent), blackImg(":/img/mushroom.png"), whiteImg(":/img/slime.png")
 {
 
 }
@@ -47,10 +47,11 @@ void RenderArea::paintEvent(QPaintEvent* event)
         }
     }
 
-    const QImage image(":/img/mushroom.png");
+    const QImage& image = blackImg;
     QRect target(RECTSIZE/2 + 10*RECTSIZE - image.width()/2,
                  RECTSIZE/2 + 10*RECTSIZE - image.height()/2,
                  image.width(),
                  image.height());
     painter.drawImage(target, image);
+
 }
