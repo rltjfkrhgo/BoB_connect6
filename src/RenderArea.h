@@ -16,6 +16,8 @@ protected:
     void paintEvent(QPaintEvent* event) override;
 
 private:
+    void drawPiece(const QImage& img, int y, int x);
+
     constexpr static int RECTSIZE = 24;
 
     const QImage blackImg;

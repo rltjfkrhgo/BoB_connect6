@@ -63,26 +63,28 @@ void RenderArea::paintEvent(QPaintEvent* event)
     {
         for(int x = 0; x < Connect6::BOARDSIZE; x++)
         {
-            Connect6::Piece piece = Connect6::getInstance()->getBoard(y, x);
-
-            if(piece == Connect6::BLACK)
+            const Connect6::Piece piece = Connect6::getInstance()->getBoard(y, x);
+            switch(piece)
             {
-                const QImage& image = blackImg;
-                QRect target(RECTSIZE/2 + x*RECTSIZE - image.width()/2,
-                             RECTSIZE/2 + y*RECTSIZE - image.height()/2,
-                             image.width(),
-                             image.height());
-                painter.drawImage(target, image);
-            }
-            else if(piece == Connect6::WHITE)
-            {
-                const QImage& image = whiteImg;
-                QRect target(RECTSIZE/2 + x*RECTSIZE - image.width()/2,
-                             RECTSIZE/2 + y*RECTSIZE - image.height()/2,
-                             image.width(),
-                             image.height());
-                painter.drawImage(target, image);
+            case Connect6::BLACK:
+                drawPiece(blackImg, y, x);
+                break;
+            case Connect6::WHITE:
+                drawPiece(whiteImg, y, x);
+                break;
+            default:
+                break;
             }
         }
     }
+}
+
+void RenderArea::drawPiece(const QImage& image, int y, int x)
+{
+    QPainter painter(this);
+    QRect target(RECTSIZE/2 + x*RECTSIZE - image.width()/2,
+                 RECTSIZE/2 + y*RECTSIZE - image.height()/2,
+                 image.width(),
+                 image.height());
+    painter.drawImage(target, image);
 }
