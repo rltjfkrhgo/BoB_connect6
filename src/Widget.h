@@ -24,6 +24,7 @@ private:
     QPushButton* soloBlackStartButton;
     QPushButton* soloWhiteStartButton;
     QPushButton* networkStartButton;
+    QPushButton* resetButton;
 };
 
 #endif // WIDGET_H

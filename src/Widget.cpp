@@ -15,6 +15,7 @@ Widget::Widget(QWidget* parent)
                                            tr("1(W) : CPU"),
                                            this);
     networkStartButton = new QPushButton(tr("1 : Network"), this);
+    resetButton = new QPushButton(tr("Reset"), this);
 
     QGridLayout* mainLayout = new QGridLayout;
     mainLayout->addWidget(renderArea, 0, 0);
@@ -23,6 +24,7 @@ Widget::Widget(QWidget* parent)
     mainLayout->addWidget(soloBlackStartButton);
     mainLayout->addWidget(soloWhiteStartButton);
     mainLayout->addWidget(networkStartButton);
+    mainLayout->addWidget(resetButton);
     setLayout(mainLayout);
 }
 
