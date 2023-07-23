@@ -9,11 +9,13 @@ CONFIG += c++11
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    src/Connect6.cpp \
     src/RenderArea.cpp \
     src/Widget.cpp \
     src/main.cpp
 
 HEADERS += \
+    src/Connect6.h \
     src/RenderArea.h \
     src/Widget.h
 

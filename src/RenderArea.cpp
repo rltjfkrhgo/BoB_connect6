@@ -1,6 +1,10 @@
 #include "RenderArea.h"
 
 #include <QPainter>
+#include <QMouseEvent>
+#include <QtDebug>
+
+#include "Connect6.h"
 
 RenderArea::RenderArea(QWidget *parent)
     : QWidget(parent), blackImg(":/img/mushroom.png"), whiteImg(":/img/slime.png")
@@ -13,10 +17,18 @@ QSize RenderArea::sizeHint() const
     return QSize(456, 456);
 }
 
+void RenderArea::mousePressEvent(QMouseEvent* event)
+{
+    const int x = event->x() / RECTSIZE;
+    const int y = event->y() / RECTSIZE;
+
+    Connect6::getInstance()->setPiece(Connect6::BLACK, y, x);
+
+    update();
+}
+
 void RenderArea::paintEvent(QPaintEvent* event)
 {
-    constexpr int RECTSIZE = 24;
-
     QPainter painter(this);
 
     // 바둑판 배경
@@ -47,11 +59,30 @@ void RenderArea::paintEvent(QPaintEvent* event)
         }
     }
 
-    const QImage& image = blackImg;
-    QRect target(RECTSIZE/2 + 10*RECTSIZE - image.width()/2,
-                 RECTSIZE/2 + 10*RECTSIZE - image.height()/2,
-                 image.width(),
-                 image.height());
-    painter.drawImage(target, image);
+    for(int y = 0; y < Connect6::BOARDSIZE; y++)
+    {
+        for(int x = 0; x < Connect6::BOARDSIZE; x++)
+        {
+            Connect6::Piece piece = Connect6::getInstance()->getBoard(y, x);
 
+            if(piece == Connect6::BLACK)
+            {
+                const QImage& image = blackImg;
+                QRect target(RECTSIZE/2 + x*RECTSIZE - image.width()/2,
+                             RECTSIZE/2 + y*RECTSIZE - image.height()/2,
+                             image.width(),
+                             image.height());
+                painter.drawImage(target, image);
+            }
+            else if(piece == Connect6::WHITE)
+            {
+                const QImage& image = whiteImg;
+                QRect target(RECTSIZE/2 + x*RECTSIZE - image.width()/2,
+                             RECTSIZE/2 + y*RECTSIZE - image.height()/2,
+                             image.width(),
+                             image.height());
+                painter.drawImage(target, image);
+            }
+        }
+    }
 }

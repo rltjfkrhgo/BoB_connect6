@@ -12,9 +12,12 @@ public:
     QSize sizeHint() const override;
 
 protected:
+    void mousePressEvent(QMouseEvent* event) override;
     void paintEvent(QPaintEvent* event) override;
 
 private:
+    constexpr static int RECTSIZE = 24;
+
     const QImage blackImg;
     const QImage whiteImg;
 };
