@@ -21,7 +21,7 @@ private:
     RenderArea* renderArea;
 
     QLabel* statusLabel;
-    QPushButton* duoStartButton;
+    QPushButton* startDuoButton;
     QPushButton* soloBlackStartButton;
     QPushButton* soloWhiteStartButton;
     QPushButton* networkStartButton;

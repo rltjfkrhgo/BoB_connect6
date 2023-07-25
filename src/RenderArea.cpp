@@ -22,7 +22,7 @@ void RenderArea::mousePressEvent(QMouseEvent* event)
     const int x = event->x() / RECTSIZE;
     const int y = event->y() / RECTSIZE;
 
-    Connect6::getInstance()->setPiece(Connect6::BLACK, y, x);
+    Connect6::getInstance()->setPiece(y, x);
 }
 
 void RenderArea::paintEvent(QPaintEvent* event)

@@ -9,7 +9,7 @@ Widget::Widget(QWidget* parent)
 
     statusLabel = new QLabel(tr("Ready"));
 
-    duoStartButton = new QPushButton(tr("1 : 1"), this);
+    startDuoButton = new QPushButton(tr("1 : 1"), this);
     soloBlackStartButton = new QPushButton(QIcon(":/img/mushroom.png"),
                                            tr("1(B) : CPU"),
                                            this);
@@ -22,13 +22,15 @@ Widget::Widget(QWidget* parent)
     connect(Connect6::getInstance(), &Connect6::boardChanged,
             this, &Widget::onBoardChanged);
 
+    connect(startDuoButton, &QPushButton::clicked,
+            Connect6::getInstance(), &Connect6::startDuo);
     connect(resetButton, &QPushButton::clicked,
             Connect6::getInstance(), &Connect6::reset);
 
     QGridLayout* mainLayout = new QGridLayout;
     mainLayout->addWidget(renderArea, 0, 0);
     mainLayout->addWidget(statusLabel);
-    mainLayout->addWidget(duoStartButton);
+    mainLayout->addWidget(startDuoButton);
     mainLayout->addWidget(soloBlackStartButton);
     mainLayout->addWidget(soloWhiteStartButton);
     mainLayout->addWidget(networkStartButton);
@@ -43,4 +45,34 @@ Widget::~Widget()
 void Widget::onBoardChanged()
 {
     renderArea->update();
+
+    QString str;
+    switch(Connect6::getInstance()->getStatus())
+    {
+    case Connect6::READY:
+        str = "Ready";
+        break;
+    case Connect6::START:
+        str = "Start";
+        break;
+    case Connect6::BLACK1:
+        str = "Black1";
+        break;
+    case Connect6::BLACK2:
+        str = "Black2";
+        break;
+    case Connect6::WHITE1:
+        str = "White1";
+        break;
+    case Connect6::WHITE2:
+        str = "White2";
+        break;
+    case Connect6::END:
+        str = "end";
+        break;
+    default:
+        break;
+    }
+
+    statusLabel->setText(str);
 }

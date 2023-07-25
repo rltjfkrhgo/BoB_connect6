@@ -13,8 +13,10 @@ public:
 
     static Connect6* getInstance();
     void reset();
-    void setPiece(Piece color, int y, int x);
-    Piece getBoard(int y, int x) const;
+    void startDuo();
+    void setPiece(int y, int x);
+    Piece  getBoard(int y, int x) const;
+    Status getStatus() const;
 
     constexpr static int BOARDSIZE = 19;
 
