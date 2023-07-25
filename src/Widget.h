@@ -16,6 +16,8 @@ public:
 
 private slots:
     void onBoardChanged();
+    void onReset();
+    void onStartDuo();
 
 private:
     RenderArea* renderArea;
