@@ -1,5 +1,7 @@
 #include "Widget.h"
 
+#include "Connect6.h"
+
 Widget::Widget(QWidget* parent)
     : QWidget(parent)
 {
@@ -17,6 +19,9 @@ Widget::Widget(QWidget* parent)
     networkStartButton = new QPushButton(tr("1 : Network"), this);
     resetButton = new QPushButton(tr("Reset"), this);
 
+    connect(Connect6::getInstance(), &Connect6::boardChanged,
+            this, &Widget::onBoardChanged);
+
     QGridLayout* mainLayout = new QGridLayout;
     mainLayout->addWidget(renderArea, 0, 0);
     mainLayout->addWidget(statusLabel);
@@ -30,4 +35,9 @@ Widget::Widget(QWidget* parent)
 
 Widget::~Widget()
 {
+}
+
+void Widget::onBoardChanged()
+{
+    renderArea->update();
 }

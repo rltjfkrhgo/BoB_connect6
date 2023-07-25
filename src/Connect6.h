@@ -1,8 +1,12 @@
 #ifndef CONNECT6_H
 #define CONNECT6_H
 
-class Connect6
+#include <QObject>
+
+class Connect6 : public QObject
 {
+    Q_OBJECT
+
 public:
     enum Piece {EMPTY, BLACK, WHITE};
 
@@ -13,8 +17,11 @@ public:
 
     constexpr static int BOARDSIZE = 19;
 
+signals:
+    void boardChanged();
+
 private:
-    Connect6();
+    explicit Connect6(QObject* parent = nullptr);
     Piece board[BOARDSIZE][BOARDSIZE];
 };
 

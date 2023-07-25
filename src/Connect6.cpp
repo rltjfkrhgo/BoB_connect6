@@ -2,7 +2,7 @@
 
 #include <cstring>
 
-Connect6::Connect6()
+Connect6::Connect6(QObject* parent) : QObject(parent)
 {
     resetBoard();
 }
@@ -21,6 +21,7 @@ void Connect6::resetBoard()
 void Connect6::setPiece(Piece color, int y, int x)
 {
     board[y][x] = color;
+    emit boardChanged();
 }
 
 Connect6::Piece Connect6::getBoard(int y, int x) const

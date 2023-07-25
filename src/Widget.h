@@ -15,6 +15,7 @@ public:
     ~Widget();
 
 private slots:
+    void onBoardChanged();
 
 private:
     RenderArea* renderArea;
