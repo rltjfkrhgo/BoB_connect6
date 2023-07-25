@@ -4,7 +4,7 @@
 
 Connect6::Connect6(QObject* parent) : QObject(parent)
 {
-    resetBoard();
+    reset();
 }
 
 Connect6* Connect6::getInstance()
@@ -13,9 +13,11 @@ Connect6* Connect6::getInstance()
     return &instance;
 }
 
-void Connect6::resetBoard()
+void Connect6::reset()
 {
     std::memset(board, 0, sizeof(Piece)*BOARDSIZE*BOARDSIZE);
+    status = READY;
+    emit boardChanged();
 }
 
 void Connect6::setPiece(Piece color, int y, int x)

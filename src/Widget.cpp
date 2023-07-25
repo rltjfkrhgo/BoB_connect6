@@ -22,6 +22,9 @@ Widget::Widget(QWidget* parent)
     connect(Connect6::getInstance(), &Connect6::boardChanged,
             this, &Widget::onBoardChanged);
 
+    connect(resetButton, &QPushButton::clicked,
+            Connect6::getInstance(), &Connect6::reset);
+
     QGridLayout* mainLayout = new QGridLayout;
     mainLayout->addWidget(renderArea, 0, 0);
     mainLayout->addWidget(statusLabel);
