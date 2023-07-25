@@ -25,6 +25,7 @@ signals:
 
 private:
     explicit Connect6(QObject* parent = nullptr);
+    bool isEnd(Piece color, int y, int x) const;
 
     Piece  board[BOARDSIZE][BOARDSIZE];
     Status status;

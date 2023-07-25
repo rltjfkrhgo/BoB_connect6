@@ -39,31 +39,31 @@ void Connect6::setPiece(int y, int x)
     case START:
         board[y][x] = BLACK;
         status = WHITE1;
-        emit boardChanged();
         break;
     case BLACK1:
         board[y][x] = BLACK;
         status = BLACK2;
-        emit boardChanged();
         break;
     case BLACK2:
         board[y][x] = BLACK;
         status = WHITE1;
-        emit boardChanged();
         break;
     case WHITE1:
         board[y][x] = WHITE;
         status = WHITE2;
-        emit boardChanged();
         break;
     case WHITE2:
         board[y][x] = WHITE;
         status = BLACK1;
-        emit boardChanged();
         break;
     default:
         break;
     }
+
+    if(isEnd(board[y][x], y, x))
+        status = END;
+
+    emit boardChanged();
 }
 
 Connect6::Piece Connect6::getBoard(int y, int x) const
@@ -74,4 +74,34 @@ Connect6::Piece Connect6::getBoard(int y, int x) const
 Connect6::Status Connect6::getStatus() const
 {
     return status;
+}
+
+bool Connect6::isEnd(Piece color, int Y, int X) const
+{
+    constexpr static int dy[] = {-1, -1, 0, 1, 1,  1,  0, -1};
+    constexpr static int dx[] = { 0,  1, 1, 1, 0, -1, -1, -1};
+
+    int cnt[8] = {0};
+
+    for(int i = 0; i < 8; i++)
+    {
+        int y = Y + dy[i];
+        int x = X + dx[i];
+        while(0 <= y && y < BOARDSIZE &&
+              0 <= x && x < BOARDSIZE &&
+              board[y][x] == color)
+        {
+            cnt[i]++;
+            y += dy[i];
+            x += dx[i];
+        }
+    }
+
+    for(int i = 0; i < 4; i++)
+    {
+        if(6 <= 1+cnt[i]+cnt[i+4])
+            return true;
+    }
+
+    return false;
 }

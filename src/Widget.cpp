@@ -66,7 +66,7 @@ void Widget::onBoardChanged()
         str = "White2";
         break;
     case Connect6::END:
-        str = "end";
+        str = "End";
         break;
     default:
         break;
