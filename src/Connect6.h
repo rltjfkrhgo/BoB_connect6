@@ -2,6 +2,7 @@
 #define CONNECT6_H
 
 #include <QObject>
+#include <functional>
 
 class Connect6 : public QObject
 {
@@ -9,14 +10,22 @@ class Connect6 : public QObject
 
 public:
     enum Piece  {EMPTY, BLACK, WHITE};
-    enum Status {READY, START, BLACK1, BLACK2, WHITE1, WHITE2, BLACKWIN, WHITEWIN};
+    enum Status {READY, START, BLACK1, BLACK2, WHITE1, WHITE2,
+                 BLACKWIN, WHITEWIN};
 
     static Connect6* getInstance();
 
     void reset();
     void startDuo();
-    void setPiece(int y, int x);
-    Piece  whoTurn() const;
+
+    std::function<void(int, int)> setPieceUser;
+
+    void setPieceNull(int y, int x);
+    void setPieceBlack(int y, int x);
+    void setPieceWhite(int y, int x);
+    void setPieceDuo(int y, int x);
+
+    Piece  whoseTurn() const;
     Piece  getBoard(int y, int x) const;
     Status getStatus() const;
 
@@ -27,6 +36,8 @@ signals:
 
 private:
     explicit Connect6(QObject* parent = nullptr);
+    void setPiece(Piece color, int y, int x);
+    Status nextStatus(Status status) const;
     bool isEnd(Piece color, int y, int x) const;
 
     Piece  board[BOARDSIZE][BOARDSIZE];

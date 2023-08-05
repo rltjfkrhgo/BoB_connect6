@@ -22,10 +22,10 @@ void RenderArea::mousePressEvent(QMouseEvent* event)
     const int x = event->x() / RECTSIZE;
     const int y = event->y() / RECTSIZE;
 
-    Connect6::getInstance()->setPiece(y, x);
+    Connect6::getInstance()->setPieceUser(y, x);
 }
 
-void RenderArea::paintEvent(QPaintEvent* event)
+void RenderArea::paintEvent([[maybe_unused]] QPaintEvent* event)
 {
     QPainter painter(this);
 
