@@ -17,52 +17,18 @@ void Connect6::reset()
 {
     std::memset(board, 0, sizeof(Piece)*BOARDSIZE*BOARDSIZE);
     status = READY;
+    setPiece = std::bind(&Connect6::setPieceNull, this,
+                         std::placeholders::_1,
+                         std::placeholders::_2);
     emit boardChanged();
 }
 
 void Connect6::startDuo()
 {
     status = START;
-    emit boardChanged();
-}
-
-void Connect6::setPiece(int y, int x)
-{
-    if(status == READY || status == END)
-        return;
-
-    if(board[y][x] != EMPTY)
-        return;
-
-    switch(status)
-    {
-    case START:
-        board[y][x] = BLACK;
-        status = WHITE1;
-        break;
-    case BLACK1:
-        board[y][x] = BLACK;
-        status = BLACK2;
-        break;
-    case BLACK2:
-        board[y][x] = BLACK;
-        status = WHITE1;
-        break;
-    case WHITE1:
-        board[y][x] = WHITE;
-        status = WHITE2;
-        break;
-    case WHITE2:
-        board[y][x] = WHITE;
-        status = BLACK1;
-        break;
-    default:
-        break;
-    }
-
-    if(isEnd(board[y][x], y, x))
-        status = END;
-
+    setPiece = std::bind(&Connect6::setPieceDuo, this,
+                         std::placeholders::_1,
+                         std::placeholders::_2);
     emit boardChanged();
 }
 
@@ -104,4 +70,49 @@ bool Connect6::isEnd(Piece color, int Y, int X) const
     }
 
     return false;
+}
+
+void Connect6::setPieceNull([[maybe_unused]] int y, [[maybe_unused]] int x)
+{
+    // do nothing
+}
+
+void Connect6::setPieceDuo(int y, int x)
+{
+    if(status == READY || status == END)
+        return;
+
+    if(board[y][x] != EMPTY)
+        return;
+
+    switch(status)
+    {
+    case START:
+        board[y][x] = BLACK;
+        status = WHITE1;
+        break;
+    case BLACK1:
+        board[y][x] = BLACK;
+        status = BLACK2;
+        break;
+    case BLACK2:
+        board[y][x] = BLACK;
+        status = WHITE1;
+        break;
+    case WHITE1:
+        board[y][x] = WHITE;
+        status = WHITE2;
+        break;
+    case WHITE2:
+        board[y][x] = WHITE;
+        status = BLACK1;
+        break;
+    default:
+        break;
+    }
+
+    if(isEnd(board[y][x], y, x))
+        status = END;
+
+    emit boardChanged();
 }
