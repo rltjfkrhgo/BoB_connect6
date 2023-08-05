@@ -47,56 +47,7 @@ void Connect6::setPieceWhite(int y, int x)
 
 void Connect6::setPieceDuo(int y, int x)
 {
-    if(status != START  &&
-       status != BLACK1 && status != BLACK2 &&
-       status != WHITE1 && status != WHITE2)
-        return;
-
-    if(board[y][x] != EMPTY)
-        return;
-
-    switch(status)
-    {
-    case START:
-        board[y][x] = BLACK;
-        status = WHITE1;
-        break;
-    case BLACK1:
-        board[y][x] = BLACK;
-        status = BLACK2;
-        break;
-    case BLACK2:
-        board[y][x] = BLACK;
-        status = WHITE1;
-        break;
-    case WHITE1:
-        board[y][x] = WHITE;
-        status = WHITE2;
-        break;
-    case WHITE2:
-        board[y][x] = WHITE;
-        status = BLACK1;
-        break;
-    default:
-        break;
-    }
-
-    if(isEnd(board[y][x], y, x))
-    {
-        switch(whoseTurn())
-        {
-        case BLACK:
-            status = BLACKWIN;
-            break;
-        case WHITE:
-            status = WHITEWIN;
-            break;
-        default:
-            break;
-        }
-    }
-
-    emit boardChanged();
+    setPiece(whoseTurn(), y, x);
 }
 
 Connect6::Piece Connect6::whoseTurn() const

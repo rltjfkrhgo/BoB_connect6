@@ -20,11 +20,6 @@ public:
 
     std::function<void(int, int)> setPieceUser;
 
-    void setPieceNull(int y, int x);
-    void setPieceBlack(int y, int x);
-    void setPieceWhite(int y, int x);
-    void setPieceDuo(int y, int x);
-
     Piece  whoseTurn() const;
     Piece  getBoard(int y, int x) const;
     Status getStatus() const;
@@ -36,7 +31,13 @@ signals:
 
 private:
     explicit Connect6(QObject* parent = nullptr);
+
+    void setPieceNull(int y, int x);
+    void setPieceBlack(int y, int x);
+    void setPieceWhite(int y, int x);
+    void setPieceDuo(int y, int x);
     void setPiece(Piece color, int y, int x);
+
     Status nextStatus(Status status) const;
     bool isEnd(Piece color, int y, int x) const;
 
