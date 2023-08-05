@@ -9,12 +9,14 @@ class Connect6 : public QObject
 
 public:
     enum Piece  {EMPTY, BLACK, WHITE};
-    enum Status {READY, START, BLACK1, BLACK2, WHITE1, WHITE2, END};
+    enum Status {READY, START, BLACK1, BLACK2, WHITE1, WHITE2, BLACKWIN, WHITEWIN};
 
     static Connect6* getInstance();
+
     void reset();
     void startDuo();
     void setPiece(int y, int x);
+    Piece  whoTurn() const;
     Piece  getBoard(int y, int x) const;
     Status getStatus() const;
 

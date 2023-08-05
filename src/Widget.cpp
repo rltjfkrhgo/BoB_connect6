@@ -22,8 +22,8 @@ Widget::Widget(QWidget* parent)
     connect(Connect6::getInstance(), &Connect6::boardChanged,
             this, &Widget::onBoardChanged);
 
-    connect(startDuoButton, &QPushButton::clicked, this, &Widget::onStartDuo);
-    connect(resetButton, &QPushButton::clicked, this, &Widget::onReset);
+    connect(startDuoButton, &QPushButton::clicked, this, &Widget::onStartDuoButtonClicked);
+    connect(resetButton, &QPushButton::clicked, this, &Widget::onResetButtonClicked);
 
     QGridLayout* mainLayout = new QGridLayout;
     mainLayout->addWidget(renderArea, 0, 0);
@@ -65,8 +65,11 @@ void Widget::onBoardChanged()
     case Connect6::WHITE2:
         str = "White2";
         break;
-    case Connect6::END:
-        str = "End";
+    case Connect6::BLACKWIN:
+        str = "Black Win";
+        break;
+    case Connect6::WHITEWIN:
+        str = "White Win";
         break;
     default:
         break;
@@ -75,7 +78,7 @@ void Widget::onBoardChanged()
     statusLabel->setText(str);
 }
 
-void Widget::onReset()
+void Widget::onResetButtonClicked()
 {
     startDuoButton->setEnabled(true);
     soloBlackStartButton->setEnabled(true);
@@ -85,7 +88,7 @@ void Widget::onReset()
     Connect6::getInstance()->reset();
 }
 
-void Widget::onStartDuo()
+void Widget::onStartDuoButtonClicked()
 {
     startDuoButton->setEnabled(false);
     soloBlackStartButton->setEnabled(false);

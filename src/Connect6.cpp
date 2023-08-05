@@ -28,7 +28,9 @@ void Connect6::startDuo()
 
 void Connect6::setPiece(int y, int x)
 {
-    if(status == READY || status == END)
+    if(status != START  &&
+       status != BLACK1 && status != BLACK2 &&
+       status != WHITE1 && status != WHITE2)
         return;
 
     if(board[y][x] != EMPTY)
@@ -61,9 +63,36 @@ void Connect6::setPiece(int y, int x)
     }
 
     if(isEnd(board[y][x], y, x))
-        status = END;
+    {
+        switch(whoTurn())
+        {
+        case BLACK:
+            status = BLACKWIN;
+            break;
+        case WHITE:
+            status = WHITEWIN;
+            break;
+        default:
+            break;
+        }
+    }
 
     emit boardChanged();
+}
+
+Connect6::Piece Connect6::whoTurn() const
+{
+    switch(status)
+    {
+    case BLACK1:
+    case BLACK2:
+        return BLACK;
+    case WHITE1:
+    case WHITE2:
+        return WHITE;
+    default:
+        return EMPTY;
+    }
 }
 
 Connect6::Piece Connect6::getBoard(int y, int x) const
