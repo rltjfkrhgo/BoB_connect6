@@ -17,6 +17,8 @@ void Connect6::reset()
 {
     setPieceUser = std::bind(&Connect6::setPieceNull, this,
                              std::placeholders::_1, std::placeholders::_2);
+    setPieceBot = std::bind(&Connect6::setPieceNull, this,
+                            std::placeholders::_1, std::placeholders::_2);
     std::memset(board, 0, sizeof(Piece)*BOARDSIZE*BOARDSIZE);
     status = READY;
     emit boardChanged();
@@ -26,6 +28,30 @@ void Connect6::startDuo()
 {
     setPieceUser = std::bind(&Connect6::setPieceDuo, this,
                              std::placeholders::_1, std::placeholders::_2);
+    status = START;
+    emit boardChanged();
+}
+
+void Connect6::startBot(Piece userColor)
+{
+    switch(userColor)
+    {
+    case BLACK:
+        setPieceUser = std::bind(&Connect6::setPieceBlack, this,
+                                 std::placeholders::_1, std::placeholders::_2);
+        setPieceBot = std::bind(&Connect6::setPieceWhite, this,
+                                std::placeholders::_1, std::placeholders::_2);
+        break;
+    case WHITE:
+        setPieceUser = std::bind(&Connect6::setPieceWhite, this,
+                                 std::placeholders::_1, std::placeholders::_2);
+        setPieceBot = std::bind(&Connect6::setPieceBlack, this,
+                                std::placeholders::_1, std::placeholders::_2);
+        break;
+    default:
+        break;
+    }
+
     status = START;
     emit boardChanged();
 }

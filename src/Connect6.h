@@ -17,8 +17,10 @@ public:
 
     void reset();
     void startDuo();
+    void startBot(Piece userColor);
 
     std::function<void(int, int)> setPieceUser;
+    std::function<void(int, int)> setPieceBot;
 
     Piece  whoseTurn() const;
     Piece  getBoard(int y, int x) const;

@@ -22,8 +22,12 @@ Widget::Widget(QWidget* parent)
     connect(Connect6::getInstance(), &Connect6::boardChanged,
             this, &Widget::onBoardChanged);
 
-    connect(startDuoButton, &QPushButton::clicked, this, &Widget::onStartDuoButtonClicked);
-    connect(resetButton, &QPushButton::clicked, this, &Widget::onResetButtonClicked);
+    connect(startDuoButton, &QPushButton::clicked,
+            this, &Widget::onStartDuoButtonClicked);
+    connect(soloBlackStartButton, &QPushButton::clicked,
+            this, &Widget::onSoloBlackStartButtonClicked);
+    connect(resetButton, &QPushButton::clicked,
+            this, &Widget::onResetButtonClicked);
 
     QGridLayout* mainLayout = new QGridLayout;
     mainLayout->addWidget(renderArea, 0, 0);
@@ -96,4 +100,14 @@ void Widget::onStartDuoButtonClicked()
     networkStartButton->setEnabled(false);
 
     Connect6::getInstance()->startDuo();
+}
+
+void Widget::onSoloBlackStartButtonClicked()
+{
+    startDuoButton->setEnabled(false);
+    soloBlackStartButton->setEnabled(false);
+    soloWhiteStartButton->setEnabled(false);
+    networkStartButton->setEnabled(false);
+
+    Connect6::getInstance()->startBot(Connect6::BLACK);
 }

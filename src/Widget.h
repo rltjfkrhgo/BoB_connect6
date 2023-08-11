@@ -18,6 +18,7 @@ private slots:
     void onBoardChanged();
     void onResetButtonClicked();
     void onStartDuoButtonClicked();
+    void onSoloBlackStartButtonClicked();
 
 private:
     RenderArea* renderArea;
