@@ -1,51 +1,51 @@
-#include "Connect6.h"
+#include "Controller.h"
 
 #include <cstring>
 
-Connect6::Connect6(QObject* parent) : QObject(parent)
+Controller::Controller(QObject* parent) : QObject(parent)
 {
     reset();
 }
 
-Connect6* Connect6::getInstance()
+Controller* Controller::getInstance()
 {
-    static Connect6 instance;
+    static Controller instance;
     return &instance;
 }
 
-void Connect6::reset()
+void Controller::reset()
 {
-    setPieceUser = std::bind(&Connect6::setPieceNull, this,
+    setPieceUser = std::bind(&Controller::setPieceNull, this,
                              std::placeholders::_1, std::placeholders::_2);
-    setPieceBot = std::bind(&Connect6::setPieceNull, this,
+    setPieceBot = std::bind(&Controller::setPieceNull, this,
                             std::placeholders::_1, std::placeholders::_2);
     std::memset(board, 0, sizeof(Piece)*BOARDSIZE*BOARDSIZE);
     status = READY;
     emit boardChanged();
 }
 
-void Connect6::startDuo()
+void Controller::startDuo()
 {
-    setPieceUser = std::bind(&Connect6::setPieceDuo, this,
+    setPieceUser = std::bind(&Controller::setPieceDuo, this,
                              std::placeholders::_1, std::placeholders::_2);
     status = START;
     emit boardChanged();
 }
 
-void Connect6::startBot(Piece userColor)
+void Controller::startBot(Piece userColor)
 {
     switch(userColor)
     {
     case BLACK:
-        setPieceUser = std::bind(&Connect6::setPieceBlack, this,
+        setPieceUser = std::bind(&Controller::setPieceBlack, this,
                                  std::placeholders::_1, std::placeholders::_2);
-        setPieceBot = std::bind(&Connect6::setPieceWhite, this,
+        setPieceBot = std::bind(&Controller::setPieceWhite, this,
                                 std::placeholders::_1, std::placeholders::_2);
         break;
     case WHITE:
-        setPieceUser = std::bind(&Connect6::setPieceWhite, this,
+        setPieceUser = std::bind(&Controller::setPieceWhite, this,
                                  std::placeholders::_1, std::placeholders::_2);
-        setPieceBot = std::bind(&Connect6::setPieceBlack, this,
+        setPieceBot = std::bind(&Controller::setPieceBlack, this,
                                 std::placeholders::_1, std::placeholders::_2);
         break;
     default:
@@ -56,27 +56,27 @@ void Connect6::startBot(Piece userColor)
     emit boardChanged();
 }
 
-void Connect6::setPieceNull([[maybe_unused]] int y, [[maybe_unused]] int x)
+void Controller::setPieceNull([[maybe_unused]] int y, [[maybe_unused]] int x)
 {
     // do nothing
 }
 
-void Connect6::setPieceBlack(int y, int x)
+void Controller::setPieceBlack(int y, int x)
 {
     setPiece(BLACK, y, x);
 }
 
-void Connect6::setPieceWhite(int y, int x)
+void Controller::setPieceWhite(int y, int x)
 {
     setPiece(WHITE, y, x);
 }
 
-void Connect6::setPieceDuo(int y, int x)
+void Controller::setPieceDuo(int y, int x)
 {
     setPiece(whoseTurn(), y, x);
 }
 
-Connect6::Piece Connect6::whoseTurn() const
+Controller::Piece Controller::whoseTurn() const
 {
     switch(status)
     {
@@ -92,17 +92,17 @@ Connect6::Piece Connect6::whoseTurn() const
     }
 }
 
-Connect6::Piece Connect6::getBoard(int y, int x) const
+Controller::Piece Controller::getBoard(int y, int x) const
 {
     return board[y][x];
 }
 
-Connect6::Status Connect6::getStatus() const
+Controller::Status Controller::getStatus() const
 {
     return status;
 }
 
-void Connect6::setPiece(Piece color, int y, int x)
+void Controller::setPiece(Piece color, int y, int x)
 {
     if(whoseTurn() != color)
         return;
@@ -127,7 +127,7 @@ void Connect6::setPiece(Piece color, int y, int x)
     emit boardChanged();
 }
 
-Connect6::Status Connect6::nextStatus(Status status) const
+Controller::Status Controller::nextStatus(Status status) const
 {
     switch(status)
     {
@@ -146,7 +146,7 @@ Connect6::Status Connect6::nextStatus(Status status) const
     }
 }
 
-bool Connect6::isEnd(Piece color, int Y, int X) const
+bool Controller::isEnd(Piece color, int Y, int X) const
 {
     constexpr static int dy[] = {-1, -1, 0, 1, 1,  1,  0, -1};
     constexpr static int dx[] = { 0,  1, 1, 1, 0, -1, -1, -1};

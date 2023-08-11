@@ -4,7 +4,7 @@
 #include <QMouseEvent>
 #include <QtDebug>
 
-#include "Connect6.h"
+#include "Controller.h"
 
 RenderArea::RenderArea(QWidget *parent)
     : QWidget(parent), blackImg(":/resource/mushroom.png"), whiteImg(":/resource/slime.png")
@@ -22,7 +22,7 @@ void RenderArea::mousePressEvent(QMouseEvent* event)
     const int x = event->x() / RECTSIZE;
     const int y = event->y() / RECTSIZE;
 
-    Connect6::getInstance()->setPieceUser(y, x);
+    Controller::getInstance()->setPieceUser(y, x);
 }
 
 void RenderArea::paintEvent([[maybe_unused]] QPaintEvent* event)
@@ -57,17 +57,17 @@ void RenderArea::paintEvent([[maybe_unused]] QPaintEvent* event)
         }
     }
 
-    for(int y = 0; y < Connect6::BOARDSIZE; y++)
+    for(int y = 0; y < Controller::BOARDSIZE; y++)
     {
-        for(int x = 0; x < Connect6::BOARDSIZE; x++)
+        for(int x = 0; x < Controller::BOARDSIZE; x++)
         {
-            const Connect6::Piece piece = Connect6::getInstance()->getBoard(y, x);
+            const Controller::Piece piece = Controller::getInstance()->getBoard(y, x);
             switch(piece)
             {
-            case Connect6::BLACK:
+            case Controller::BLACK:
                 drawPiece(blackImg, y, x);
                 break;
-            case Connect6::WHITE:
+            case Controller::WHITE:
                 drawPiece(whiteImg, y, x);
                 break;
             default:

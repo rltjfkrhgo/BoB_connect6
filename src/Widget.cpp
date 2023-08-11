@@ -1,6 +1,6 @@
 #include "Widget.h"
 
-#include "Connect6.h"
+#include "Controller.h"
 
 Widget::Widget(QWidget* parent)
     : QWidget(parent)
@@ -19,7 +19,7 @@ Widget::Widget(QWidget* parent)
     networkStartButton = new QPushButton(tr("1 : Network"), this);
     resetButton = new QPushButton(tr("Reset"), this);
 
-    connect(Connect6::getInstance(), &Connect6::boardChanged,
+    connect(Controller::getInstance(), &Controller::boardChanged,
             this, &Widget::onBoardChanged);
 
     connect(startDuoButton, &QPushButton::clicked,
@@ -49,30 +49,30 @@ void Widget::onBoardChanged()
     renderArea->update();
 
     QString str;
-    switch(Connect6::getInstance()->getStatus())
+    switch(Controller::getInstance()->getStatus())
     {
-    case Connect6::READY:
+    case Controller::READY:
         str = "Ready";
         break;
-    case Connect6::START:
+    case Controller::START:
         str = "Start";
         break;
-    case Connect6::BLACK1:
+    case Controller::BLACK1:
         str = "Black1";
         break;
-    case Connect6::BLACK2:
+    case Controller::BLACK2:
         str = "Black2";
         break;
-    case Connect6::WHITE1:
+    case Controller::WHITE1:
         str = "White1";
         break;
-    case Connect6::WHITE2:
+    case Controller::WHITE2:
         str = "White2";
         break;
-    case Connect6::BLACKWIN:
+    case Controller::BLACKWIN:
         str = "Black Win";
         break;
-    case Connect6::WHITEWIN:
+    case Controller::WHITEWIN:
         str = "White Win";
         break;
     default:
@@ -89,7 +89,7 @@ void Widget::onResetButtonClicked()
     soloWhiteStartButton->setEnabled(true);
     networkStartButton->setEnabled(true);
 
-    Connect6::getInstance()->reset();
+    Controller::getInstance()->reset();
 }
 
 void Widget::onStartDuoButtonClicked()
@@ -99,7 +99,7 @@ void Widget::onStartDuoButtonClicked()
     soloWhiteStartButton->setEnabled(false);
     networkStartButton->setEnabled(false);
 
-    Connect6::getInstance()->startDuo();
+    Controller::getInstance()->startDuo();
 }
 
 void Widget::onSoloBlackStartButtonClicked()
@@ -109,5 +109,5 @@ void Widget::onSoloBlackStartButtonClicked()
     soloWhiteStartButton->setEnabled(false);
     networkStartButton->setEnabled(false);
 
-    Connect6::getInstance()->startBot(Connect6::BLACK);
+    Controller::getInstance()->startBot(Controller::BLACK);
 }

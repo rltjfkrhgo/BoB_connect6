@@ -1,10 +1,10 @@
-#ifndef CONNECT6_H
-#define CONNECT6_H
+#ifndef CONTROLLER_H
+#define CONTROLLER_H
 
 #include <QObject>
 #include <functional>
 
-class Connect6 : public QObject
+class Controller : public QObject
 {
     Q_OBJECT
 
@@ -13,7 +13,7 @@ public:
     enum Status {READY, START, BLACK1, BLACK2, WHITE1, WHITE2,
                  BLACKWIN, WHITEWIN};
 
-    static Connect6* getInstance();
+    static Controller* getInstance();
 
     void reset();
     void startDuo();
@@ -32,7 +32,7 @@ signals:
     void boardChanged();
 
 private:
-    explicit Connect6(QObject* parent = nullptr);
+    explicit Controller(QObject* parent = nullptr);
 
     void setPieceNull(int y, int x);
     void setPieceBlack(int y, int x);
@@ -47,4 +47,4 @@ private:
     Status status;
 };
 
-#endif // CONNECT6_H
+#endif // CONTROLLER_H
