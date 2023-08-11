@@ -7,7 +7,7 @@
 #include "Connect6.h"
 
 RenderArea::RenderArea(QWidget *parent)
-    : QWidget(parent), blackImg(":/img/mushroom.png"), whiteImg(":/img/slime.png")
+    : QWidget(parent), blackImg(":/resource/mushroom.png"), whiteImg(":/resource/slime.png")
 {
 
 }

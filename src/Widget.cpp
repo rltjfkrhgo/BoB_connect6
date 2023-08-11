@@ -10,10 +10,10 @@ Widget::Widget(QWidget* parent)
     statusLabel = new QLabel(tr("Ready"));
 
     startDuoButton = new QPushButton(tr("1 : 1"), this);
-    soloBlackStartButton = new QPushButton(QIcon(":/img/mushroom.png"),
+    soloBlackStartButton = new QPushButton(QIcon(":/resource/mushroom.png"),
                                            tr("1(B) : CPU"),
                                            this);
-    soloWhiteStartButton = new QPushButton(QIcon(":/img/slime.png"),
+    soloWhiteStartButton = new QPushButton(QIcon(":/resource/slime.png"),
                                            tr("1(W) : CPU"),
                                            this);
     networkStartButton = new QPushButton(tr("1 : Network"), this);
