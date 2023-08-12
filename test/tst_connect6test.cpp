@@ -11,7 +11,7 @@ public:
     ~Connect6Test();
 
 private slots:
-    void test_case1();
+    void ctorTest();
 
 };
 
@@ -25,8 +25,16 @@ Connect6Test::~Connect6Test()
 
 }
 
-void Connect6Test::test_case1()
+void Connect6Test::ctorTest()
 {
+    Connect6 connect6;
+
+    QCOMPARE(connect6.getStatus(), READY);
+    for(int y = 0; y < BOARDSIZE; y++)
+    {
+        for(int x = 0; x < BOARDSIZE; x++)
+            QCOMPARE(connect6.getBoard(y, x), EMPTY);
+    }
 }
 
 QTEST_APPLESS_MAIN(Connect6Test)
