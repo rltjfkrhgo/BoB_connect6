@@ -18,16 +18,16 @@ void Controller::reset()
                              std::placeholders::_1, std::placeholders::_2);
     setPieceBot = std::bind(&Controller::setPieceNull, this,
                             std::placeholders::_1, std::placeholders::_2);
-    connect6.reset();
-    emit boardChanged();
+    const Status status = connect6.reset();
+    emit boardChanged(status);
 }
 
 void Controller::startDuo()
 {
     setPieceUser = std::bind(&Controller::setPieceDuo, this,
                              std::placeholders::_1, std::placeholders::_2);
-    connect6.start();
-    emit boardChanged();
+    const Status status = connect6.start();
+    emit boardChanged(status);
 }
 
 void Controller::startBot(Piece userColor)
@@ -50,32 +50,32 @@ void Controller::startBot(Piece userColor)
         break;
     }
 
-    connect6.start();
-    emit boardChanged();
+    const Status status = connect6.start();
+    emit boardChanged(status);
 }
 
 void Controller::setPieceNull([[maybe_unused]] int y, [[maybe_unused]] int x)
 {
     // do nothing
-    emit boardChanged();
+    emit boardChanged(connect6.getStatus());
 }
 
 void Controller::setPieceBlack(int y, int x)
 {
-    connect6.setPiece(BLACK, y, x);
-    emit boardChanged();
+    const Status status = connect6.setPiece(BLACK, y, x);
+    emit boardChanged(status);
 }
 
 void Controller::setPieceWhite(int y, int x)
 {
-    connect6.setPiece(WHITE, y, x);
-    emit boardChanged();
+    const Status status = connect6.setPiece(WHITE, y, x);
+    emit boardChanged(status);
 }
 
 void Controller::setPieceDuo(int y, int x)
 {
-    connect6.setPiece(whoseTurn(), y, x);
-    emit boardChanged();
+    const Status status = connect6.setPiece(whoseTurn(), y, x);
+    emit boardChanged(status);
 }
 
 Piece Controller::whoseTurn() const

@@ -7,17 +7,6 @@ Connect6::Connect6()
     reset();
 }
 
-void Connect6::reset()
-{
-    std::memset(board, 0, sizeof(Piece)*BOARDSIZE*BOARDSIZE);
-    status = READY;
-}
-
-void Connect6::start()
-{
-    status = START;
-}
-
 Piece Connect6::whoseTurn() const
 {
     switch(status)
@@ -37,6 +26,19 @@ Piece Connect6::whoseTurn() const
 Piece Connect6::getBoard(int y, int x) const
 {
     return board[y][x];
+}
+
+Status Connect6::reset()
+{
+    std::memset(board, 0, sizeof(Piece)*BOARDSIZE*BOARDSIZE);
+    status = READY;
+    return status;
+}
+
+Status Connect6::start()
+{
+    status = START;
+    return status;
 }
 
 Status Connect6::getStatus() const

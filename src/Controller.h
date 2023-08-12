@@ -26,7 +26,7 @@ public:
     Status getStatus() const;
 
 signals:
-    void boardChanged();
+    void boardChanged(Status status);
 
 private:
     explicit Controller(QObject* parent = nullptr);

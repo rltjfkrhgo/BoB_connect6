@@ -44,12 +44,12 @@ Widget::~Widget()
 {
 }
 
-void Widget::onBoardChanged()
+void Widget::onBoardChanged(Status status)
 {
     renderArea->update();
 
     QString str;
-    switch(Controller::getInstance()->getStatus())
+    switch(status)
     {
     case READY:
         str = "Ready";

@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QtWidgets>
 
+#include "Connect6Type.h"
 #include "RenderArea.h"
 
 class Widget : public QWidget
@@ -15,7 +16,7 @@ public:
     ~Widget();
 
 private slots:
-    void onBoardChanged();
+    void onBoardChanged(Status status);
     void onResetButtonClicked();
     void onStartDuoButtonClicked();
     void onSoloBlackStartButtonClicked();

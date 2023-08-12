@@ -8,10 +8,10 @@ class Connect6
 public:
     Connect6();
 
-    void   reset();
-    void   start();
     Piece  whoseTurn() const;
     Piece  getBoard(int y, int x) const;
+    Status reset();
+    Status start();
     Status getStatus() const;
     Status setPiece(Piece color, int y, int x);
 
