@@ -2,9 +2,8 @@
 
 #include <cstring>
 
-Controller::Controller(QObject* parent) : QObject(parent)
+Controller::Controller(QObject* parent) : QObject(parent), connect6()
 {
-    reset();
 }
 
 Controller* Controller::getInstance()
@@ -19,8 +18,7 @@ void Controller::reset()
                              std::placeholders::_1, std::placeholders::_2);
     setPieceBot = std::bind(&Controller::setPieceNull, this,
                             std::placeholders::_1, std::placeholders::_2);
-    std::memset(board, 0, sizeof(Piece)*BOARDSIZE*BOARDSIZE);
-    status = READY;
+    connect6.reset();
     emit boardChanged();
 }
 
@@ -28,7 +26,7 @@ void Controller::startDuo()
 {
     setPieceUser = std::bind(&Controller::setPieceDuo, this,
                              std::placeholders::_1, std::placeholders::_2);
-    status = START;
+    connect6.start();
     emit boardChanged();
 }
 
@@ -52,126 +50,45 @@ void Controller::startBot(Piece userColor)
         break;
     }
 
-    status = START;
+    connect6.start();
     emit boardChanged();
 }
 
 void Controller::setPieceNull([[maybe_unused]] int y, [[maybe_unused]] int x)
 {
     // do nothing
+    emit boardChanged();
 }
 
 void Controller::setPieceBlack(int y, int x)
 {
-    setPiece(BLACK, y, x);
+    connect6.setPiece(BLACK, y, x);
+    emit boardChanged();
 }
 
 void Controller::setPieceWhite(int y, int x)
 {
-    setPiece(WHITE, y, x);
+    connect6.setPiece(WHITE, y, x);
+    emit boardChanged();
 }
 
 void Controller::setPieceDuo(int y, int x)
 {
-    setPiece(whoseTurn(), y, x);
-}
-
-Controller::Piece Controller::whoseTurn() const
-{
-    switch(status)
-    {
-    case START:
-    case BLACK1:
-    case BLACK2:
-        return BLACK;
-    case WHITE1:
-    case WHITE2:
-        return WHITE;
-    default:
-        return EMPTY;
-    }
-}
-
-Controller::Piece Controller::getBoard(int y, int x) const
-{
-    return board[y][x];
-}
-
-Controller::Status Controller::getStatus() const
-{
-    return status;
-}
-
-void Controller::setPiece(Piece color, int y, int x)
-{
-    if(whoseTurn() != color)
-        return;
-
-    if(board[y][x] != EMPTY)
-        return;
-
-    board[y][x] = color;
-
-    if(isEnd(color, y, x))
-    {
-        if(color == BLACK)
-            status = BLACKWIN;
-        else if(color == WHITE)
-            status = WHITEWIN;
-    }
-    else
-    {
-        status = nextStatus(status);
-    }
-
+    connect6.setPiece(whoseTurn(), y, x);
     emit boardChanged();
 }
 
-Controller::Status Controller::nextStatus(Status status) const
+Piece Controller::whoseTurn() const
 {
-    switch(status)
-    {
-    case START:
-        return WHITE1;
-    case BLACK1:
-        return BLACK2;
-    case BLACK2:
-        return WHITE1;
-    case WHITE1:
-        return WHITE2;
-    case WHITE2:
-        return BLACK1;
-    default:
-        return status;
-    }
+    return connect6.whoseTurn();
 }
 
-bool Controller::isEnd(Piece color, int Y, int X) const
+Piece Controller::getBoard(int y, int x) const
 {
-    constexpr static int dy[] = {-1, -1, 0, 1, 1,  1,  0, -1};
-    constexpr static int dx[] = { 0,  1, 1, 1, 0, -1, -1, -1};
+    return connect6.getBoard(y, x);
+}
 
-    int cnt[8] = {0};
-
-    for(int i = 0; i < 8; i++)
-    {
-        int y = Y + dy[i];
-        int x = X + dx[i];
-        while(0 <= y && y < BOARDSIZE &&
-              0 <= x && x < BOARDSIZE &&
-              board[y][x] == color)
-        {
-            cnt[i]++;
-            y += dy[i];
-            x += dx[i];
-        }
-    }
-
-    for(int i = 0; i < 4; i++)
-    {
-        if(6 <= 1+cnt[i]+cnt[i+4])
-            return true;
-    }
-
-    return false;
+Status Controller::getStatus() const
+{
+    return connect6.getStatus();
 }

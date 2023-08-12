@@ -4,15 +4,14 @@
 #include <QObject>
 #include <functional>
 
+#include "Connect6.h"
+#include "Connect6Type.h"
+
 class Controller : public QObject
 {
     Q_OBJECT
 
 public:
-    enum Piece  {EMPTY, BLACK, WHITE};
-    enum Status {READY, START, BLACK1, BLACK2, WHITE1, WHITE2,
-                 BLACKWIN, WHITEWIN};
-
     static Controller* getInstance();
 
     void reset();
@@ -26,8 +25,6 @@ public:
     Piece  getBoard(int y, int x) const;
     Status getStatus() const;
 
-    constexpr static int BOARDSIZE = 19;
-
 signals:
     void boardChanged();
 
@@ -38,13 +35,8 @@ private:
     void setPieceBlack(int y, int x);
     void setPieceWhite(int y, int x);
     void setPieceDuo(int y, int x);
-    void setPiece(Piece color, int y, int x);
 
-    Status nextStatus(Status status) const;
-    bool isEnd(Piece color, int y, int x) const;
-
-    Piece  board[BOARDSIZE][BOARDSIZE];
-    Status status;
+    Connect6 connect6;
 };
 
 #endif // CONTROLLER_H

@@ -10,6 +10,7 @@ CONFIG += c++11
 
 SOURCES += \
     Bot.cpp \
+    Connect6.cpp \
     Controller.cpp \
     RenderArea.cpp \
     Widget.cpp \
@@ -17,6 +18,8 @@ SOURCES += \
 
 HEADERS += \
     Bot.h \
+    Connect6.h \
+    Connect6Type.h \
     Controller.h \
     RenderArea.h \
     Widget.h

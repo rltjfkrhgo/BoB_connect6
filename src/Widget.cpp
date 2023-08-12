@@ -51,28 +51,28 @@ void Widget::onBoardChanged()
     QString str;
     switch(Controller::getInstance()->getStatus())
     {
-    case Controller::READY:
+    case READY:
         str = "Ready";
         break;
-    case Controller::START:
+    case START:
         str = "Start";
         break;
-    case Controller::BLACK1:
+    case BLACK1:
         str = "Black1";
         break;
-    case Controller::BLACK2:
+    case BLACK2:
         str = "Black2";
         break;
-    case Controller::WHITE1:
+    case WHITE1:
         str = "White1";
         break;
-    case Controller::WHITE2:
+    case WHITE2:
         str = "White2";
         break;
-    case Controller::BLACKWIN:
+    case BLACKWIN:
         str = "Black Win";
         break;
-    case Controller::WHITEWIN:
+    case WHITEWIN:
         str = "White Win";
         break;
     default:
@@ -109,5 +109,5 @@ void Widget::onSoloBlackStartButtonClicked()
     soloWhiteStartButton->setEnabled(false);
     networkStartButton->setEnabled(false);
 
-    Controller::getInstance()->startBot(Controller::BLACK);
+    Controller::getInstance()->startBot(BLACK);
 }

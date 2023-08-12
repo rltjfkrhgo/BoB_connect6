@@ -3,6 +3,7 @@
 
 #include <QThread>
 
+#include "Connect6Type.h"
 #include "Controller.h"
 
 class Bot : public QThread
@@ -16,10 +17,10 @@ protected:
     void run() override;
 
 private:
-    Controller::Piece botColor;
-    Controller::Piece userColor;
+    Piece botColor;
+    Piece userColor;
 
-    int weight[Controller::BOARDSIZE][Controller::BOARDSIZE];
+    int weight[BOARDSIZE][BOARDSIZE];
 };
 
 #endif // BOT_H

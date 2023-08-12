@@ -1,6 +1,6 @@
 #include <QtTest>
 
-// add necessary includes here
+#include "../src/Connect6.h"
 
 class Connect6Test : public QObject
 {
@@ -27,7 +27,6 @@ Connect6Test::~Connect6Test()
 
 void Connect6Test::test_case1()
 {
-
 }
 
 QTEST_APPLESS_MAIN(Connect6Test)

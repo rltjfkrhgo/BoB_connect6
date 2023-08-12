@@ -57,17 +57,17 @@ void RenderArea::paintEvent([[maybe_unused]] QPaintEvent* event)
         }
     }
 
-    for(int y = 0; y < Controller::BOARDSIZE; y++)
+    for(int y = 0; y < BOARDSIZE; y++)
     {
-        for(int x = 0; x < Controller::BOARDSIZE; x++)
+        for(int x = 0; x < BOARDSIZE; x++)
         {
-            const Controller::Piece piece = Controller::getInstance()->getBoard(y, x);
+            const Piece piece = Controller::getInstance()->getBoard(y, x);
             switch(piece)
             {
-            case Controller::BLACK:
+            case BLACK:
                 drawPiece(blackImg, y, x);
                 break;
-            case Controller::WHITE:
+            case WHITE:
                 drawPiece(whiteImg, y, x);
                 break;
             default:
