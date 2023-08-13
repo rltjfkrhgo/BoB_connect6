@@ -48,6 +48,10 @@ Status Connect6::getStatus() const
 
 Status Connect6::setPiece(Piece color, int y, int x)
 {
+    if(y < 0 || BOARDSIZE <= y ||
+       x < 0 || BOARDSIZE <= x)
+        return status;
+
     if(whoseTurn() != color)
         return status;
 

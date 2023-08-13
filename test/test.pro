@@ -9,8 +9,7 @@ TEMPLATE = app
 SOURCES +=  tst_connect6test.cpp
 
 CONFIG(debug, debug|release) {
-    LIBS += -L$${OUT_PWD}/../src/debug/
+    LIBS += $${OUT_PWD}/../src/debug/Connect6.o
 } else {
-    LIBS += -L$${OUT_PWD}/../src/release/
+    LIBS += $${OUT_PWD}/../src/release/Connect6.o
 }
-LIBS += Connect6.o
