@@ -11,6 +11,7 @@ CONFIG += c++11
 SOURCES += \
     Bot.cpp \
     Connect6.cpp \
+    Connect6Type.cpp \
     Controller.cpp \
     RenderArea.cpp \
     Widget.cpp \

@@ -7,4 +7,6 @@ enum Status {READY, START, BLACK1, BLACK2, WHITE1, WHITE2,
 
 constexpr int BOARDSIZE = 19;
 
+Piece operator!(Piece piece);
+
 #endif // CONNECT6TYPE_H
