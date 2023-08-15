@@ -26,6 +26,8 @@ Widget::Widget(QWidget* parent)
             this, &Widget::onStartDuoButtonClicked);
     connect(soloBlackStartButton, &QPushButton::clicked,
             this, &Widget::onSoloBlackStartButtonClicked);
+    connect(soloWhiteStartButton, &QPushButton::clicked,
+            this, &Widget::onSoloWhiteStartButtonClicked);
     connect(resetButton, &QPushButton::clicked,
             this, &Widget::onResetButtonClicked);
 
@@ -110,4 +112,14 @@ void Widget::onSoloBlackStartButtonClicked()
     networkStartButton->setEnabled(false);
 
     Controller::getInstance()->startBot(BLACK);
+}
+
+void Widget::onSoloWhiteStartButtonClicked()
+{
+    startDuoButton->setEnabled(false);
+    soloBlackStartButton->setEnabled(false);
+    soloWhiteStartButton->setEnabled(false);
+    networkStartButton->setEnabled(false);
+
+    Controller::getInstance()->startBot(WHITE);
 }
