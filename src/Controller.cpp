@@ -4,6 +4,7 @@
 
 Controller::Controller(QObject* parent) : QObject(parent), connect6()
 {
+    reset();
 }
 
 Controller* Controller::getInstance()
