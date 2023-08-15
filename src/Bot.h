@@ -1,20 +1,23 @@
 #ifndef BOT_H
 #define BOT_H
 
-#include <QThread>
+#include <QObject>
 
 #include "Connect6Type.h"
-#include "Controller.h"
 
-class Bot : public QThread
+class Bot : public QObject
 {
     Q_OBJECT
 
 public:
-    Bot(QObject* parent = nullptr);
+    Bot(Piece _botColor, QObject* parent = nullptr);
+    ~Bot();
 
-protected:
-    void run() override;
+public slots:
+    void doWork(Status status);
+
+signals:
+    void resultReady();
 
 private:
     Piece botColor;

@@ -15,6 +15,9 @@ Controller* Controller::getInstance()
 
 void Controller::reset()
 {
+    workerThread.quit();
+    workerThread.wait();
+
     setPieceUser = std::bind(&Controller::setPieceNull, this,
                              std::placeholders::_1, std::placeholders::_2);
     setPieceBot = std::bind(&Controller::setPieceNull, this,
@@ -33,6 +36,13 @@ void Controller::startDuo()
 
 void Controller::startBot(Piece userColor)
 {
+    Bot* bot = new Bot(!userColor);
+    bot->moveToThread(&workerThread);
+    connect(&workerThread, &QThread::finished, bot, &QObject::deleteLater);
+    qRegisterMetaType<Status>("Status");
+    connect(this, &Controller::boardChanged, bot, &Bot::doWork);
+    workerThread.start();
+
     switch(userColor)
     {
     case BLACK:

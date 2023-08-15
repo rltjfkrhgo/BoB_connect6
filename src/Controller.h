@@ -2,8 +2,10 @@
 #define CONTROLLER_H
 
 #include <QObject>
+#include <QThread>
 #include <functional>
 
+#include "Bot.h"
 #include "Connect6.h"
 #include "Connect6Type.h"
 
@@ -37,6 +39,7 @@ private:
     void setPieceDuo(int y, int x);
 
     Connect6 connect6;
+    QThread workerThread;
 };
 
 #endif // CONTROLLER_H
