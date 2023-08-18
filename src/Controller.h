@@ -39,7 +39,7 @@ private:
     void setPieceDuo(int y, int x);
 
     Connect6 connect6;
-    QThread workerThread;
+    QThread botThread;
 };
 
 #endif // CONTROLLER_H
