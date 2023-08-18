@@ -31,6 +31,9 @@ private:
     QPushButton* soloWhiteStartButton;
     QPushButton* networkStartButton;
     QPushButton* resetButton;
+    QLineEdit* nameEdit;
+    QLineEdit* ipEdit;
+    QLineEdit* portEdit;
 };
 
 #endif // WIDGET_H

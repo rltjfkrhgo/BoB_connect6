@@ -16,8 +16,15 @@ Widget::Widget(QWidget* parent)
     soloWhiteStartButton = new QPushButton(QIcon(":/resource/slime.png"),
                                            tr("1(W) : CPU"),
                                            this);
-    networkStartButton = new QPushButton(tr("1 : Network"), this);
+    networkStartButton = new QPushButton(tr("CPU : Network"), this);
     resetButton = new QPushButton(tr("Reset"), this);
+
+    nameEdit = new QLineEdit(this);
+    nameEdit->setPlaceholderText(tr("Name"));
+    ipEdit = new QLineEdit(this);
+    ipEdit->setPlaceholderText(tr("IP"));
+    portEdit = new QLineEdit(this);
+    portEdit->setPlaceholderText(tr("Port"));
 
     connect(Controller::getInstance(), &Controller::boardChanged,
             this, &Widget::onBoardChanged);
@@ -37,6 +44,9 @@ Widget::Widget(QWidget* parent)
     mainLayout->addWidget(startDuoButton);
     mainLayout->addWidget(soloBlackStartButton);
     mainLayout->addWidget(soloWhiteStartButton);
+    mainLayout->addWidget(nameEdit);
+    mainLayout->addWidget(ipEdit);
+    mainLayout->addWidget(portEdit);
     mainLayout->addWidget(networkStartButton);
     mainLayout->addWidget(resetButton);
     setLayout(mainLayout);
