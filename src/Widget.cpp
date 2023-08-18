@@ -24,6 +24,7 @@ Widget::Widget(QWidget* parent)
     ipEdit = new QLineEdit(this);
     ipEdit->setPlaceholderText(tr("IP"));
     portEdit = new QLineEdit(this);
+    portEdit->setValidator(new QIntValidator(1, 65535, this));
     portEdit->setPlaceholderText(tr("Port"));
 
     connect(Controller::getInstance(), &Controller::boardChanged,
@@ -35,6 +36,8 @@ Widget::Widget(QWidget* parent)
             this, &Widget::onSoloBlackStartButtonClicked);
     connect(soloWhiteStartButton, &QPushButton::clicked,
             this, &Widget::onSoloWhiteStartButtonClicked);
+    connect(networkStartButton, &QPushButton::clicked,
+            this, &Widget::onNetworkStartButtonClicked);
     connect(resetButton, &QPushButton::clicked,
             this, &Widget::onResetButtonClicked);
 
@@ -132,4 +135,9 @@ void Widget::onSoloWhiteStartButtonClicked()
     networkStartButton->setEnabled(false);
 
     Controller::getInstance()->startBot(WHITE);
+}
+
+void Widget::onNetworkStartButtonClicked()
+{
+
 }

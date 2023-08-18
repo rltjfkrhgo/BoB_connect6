@@ -1,4 +1,4 @@
-QT       += core gui
+QT       += core gui network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -13,6 +13,7 @@ SOURCES += \
     Connect6.cpp \
     Connect6Type.cpp \
     Controller.cpp \
+    Net.cpp \
     RenderArea.cpp \
     Widget.cpp \
     main.cpp
@@ -22,6 +23,7 @@ HEADERS += \
     Connect6.h \
     Connect6Type.h \
     Controller.h \
+    Net.h \
     RenderArea.h \
     Widget.h
 

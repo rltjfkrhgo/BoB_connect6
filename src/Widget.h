@@ -21,6 +21,7 @@ private slots:
     void onStartDuoButtonClicked();
     void onSoloBlackStartButtonClicked();
     void onSoloWhiteStartButtonClicked();
+    void onNetworkStartButtonClicked();
 
 private:
     RenderArea* renderArea;
