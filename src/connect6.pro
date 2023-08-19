@@ -34,3 +34,9 @@ RESOURCES += \
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../lib/ -lconnect6_protocol
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../lib/ -lconnect6_protocol
+
+INCLUDEPATH += $$PWD/../lib
+DEPENDPATH += $$PWD/../lib

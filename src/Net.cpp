@@ -1,5 +1,7 @@
 #include "Net.h"
 
+#include <connect6_protocol.h>
+
 #include "Controller.h"
 
 Net::Net(const QString& myname,
