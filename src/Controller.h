@@ -8,6 +8,7 @@
 #include "Bot.h"
 #include "Connect6.h"
 #include "Connect6Type.h"
+#include "Net.h"
 
 class Controller : public QObject
 {
@@ -19,9 +20,11 @@ public:
     void reset();
     void startDuo();
     void startBot(Piece userColor);
+    void startNet(const QString& myname, const QString& ip, const QString& port);
 
     std::function<void(int, int)> setPieceUser;
     std::function<void(int, int)> setPieceBot;
+    std::function<void(int, int)> setPieceNet;
 
     Piece  whoseTurn() const;
     Piece  getBoard(int y, int x) const;
@@ -29,6 +32,7 @@ public:
 
 signals:
     void boardChanged(Status status);
+    void appendTextEdit(const QString& str);
 
 private:
     explicit Controller(QObject* parent = nullptr);
@@ -40,6 +44,7 @@ private:
 
     Connect6 connect6;
     QThread botThread;
+    Net* net;
 };
 
 #endif // CONTROLLER_H

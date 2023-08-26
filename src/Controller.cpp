@@ -18,11 +18,17 @@ void Controller::reset()
     botThread.quit();
     botThread.wait();
 
+    if(net != nullptr)
+        delete net;
+    net = nullptr;
+
     setPieceUser = std::bind(&Controller::setPieceNull, this,
                              std::placeholders::_1, std::placeholders::_2);
     setPieceBot = std::bind(&Controller::setPieceNull, this,
                             std::placeholders::_1, std::placeholders::_2);
+
     const Status status = connect6.reset();
+
     emit boardChanged(status);
 }
 
@@ -65,10 +71,18 @@ void Controller::startBot(Piece userColor)
     emit boardChanged(status);
 }
 
+void Controller::startNet(const QString& myname, const QString& ip, const QString& port)
+{
+    net = new Net;
+    net->sendGameStart(myname, ip, port);
+    // const Status status = connect6.start();
+    // emit boardChanged(status);
+}
+
 void Controller::setPieceNull([[maybe_unused]] int y, [[maybe_unused]] int x)
 {
     // do nothing
-    emit boardChanged(connect6.getStatus());
+    // emit boardChanged(connect6.getStatus());
 }
 
 void Controller::setPieceBlack(int y, int x)

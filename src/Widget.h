@@ -17,6 +17,7 @@ public:
 
 private slots:
     void onBoardChanged(Status status);
+    void onAppendTextEdit(const QString& str);
     void onResetButtonClicked();
     void onStartDuoButtonClicked();
     void onSoloBlackStartButtonClicked();
@@ -35,6 +36,7 @@ private:
     QLineEdit* nameEdit;
     QLineEdit* ipEdit;
     QLineEdit* portEdit;
+    QTextEdit* textEdit;
 };
 
 #endif // WIDGET_H

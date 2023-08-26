@@ -24,11 +24,16 @@ Widget::Widget(QWidget* parent)
     ipEdit = new QLineEdit(this);
     ipEdit->setPlaceholderText(tr("IP"));
     portEdit = new QLineEdit(this);
-    portEdit->setValidator(new QIntValidator(1, 65535, this));
     portEdit->setPlaceholderText(tr("Port"));
+    portEdit->setValidator(new QIntValidator(1, 65535, this));
+
+    textEdit = new QTextEdit(this);
+    textEdit->setReadOnly(true);
 
     connect(Controller::getInstance(), &Controller::boardChanged,
             this, &Widget::onBoardChanged);
+    connect(Controller::getInstance(), &Controller::appendTextEdit,
+            this, &Widget::onAppendTextEdit);
 
     connect(startDuoButton, &QPushButton::clicked,
             this, &Widget::onStartDuoButtonClicked);
@@ -42,16 +47,17 @@ Widget::Widget(QWidget* parent)
             this, &Widget::onResetButtonClicked);
 
     QGridLayout* mainLayout = new QGridLayout;
-    mainLayout->addWidget(renderArea, 0, 0);
-    mainLayout->addWidget(statusLabel);
-    mainLayout->addWidget(startDuoButton);
-    mainLayout->addWidget(soloBlackStartButton);
-    mainLayout->addWidget(soloWhiteStartButton);
-    mainLayout->addWidget(nameEdit);
-    mainLayout->addWidget(ipEdit);
-    mainLayout->addWidget(portEdit);
-    mainLayout->addWidget(networkStartButton);
-    mainLayout->addWidget(resetButton);
+    mainLayout->addWidget(renderArea, 0, 0, 9, 1);
+    mainLayout->addWidget(statusLabel, 9, 0);
+    mainLayout->addWidget(startDuoButton, 0, 1);
+    mainLayout->addWidget(soloBlackStartButton, 1, 1);
+    mainLayout->addWidget(soloWhiteStartButton, 2, 1);
+    mainLayout->addWidget(nameEdit, 3, 1);
+    mainLayout->addWidget(ipEdit, 4, 1);
+    mainLayout->addWidget(portEdit, 5, 1);
+    mainLayout->addWidget(networkStartButton, 6, 1);
+    mainLayout->addWidget(resetButton, 7, 1);
+    mainLayout->addWidget(textEdit, 8, 1);
     setLayout(mainLayout);
 }
 
@@ -71,6 +77,7 @@ void Widget::onBoardChanged(Status status)
         break;
     case START:
         str = "Start";
+        textEdit->append(tr("게임이 시작되었습니다."));
         break;
     case BLACK1:
         str = "Black1";
@@ -95,6 +102,11 @@ void Widget::onBoardChanged(Status status)
     }
 
     statusLabel->setText(str);
+}
+
+void Widget::onAppendTextEdit(const QString& str)
+{
+    textEdit->append(str);
 }
 
 void Widget::onResetButtonClicked()
@@ -139,5 +151,12 @@ void Widget::onSoloWhiteStartButtonClicked()
 
 void Widget::onNetworkStartButtonClicked()
 {
+    startDuoButton->setEnabled(false);
+    soloBlackStartButton->setEnabled(false);
+    soloWhiteStartButton->setEnabled(false);
+    networkStartButton->setEnabled(false);
 
+    Controller::getInstance()->startNet(nameEdit->text(),
+                                        ipEdit->text(),
+                                        portEdit->text());
 }
