@@ -21,11 +21,16 @@ private slots:
     void send();
 
 private:
+    void recvGameStart(const struct Connect6ProtocolHdr& hdr);
+
     QTcpSocket* socket;
 
     constexpr static int BUFFSIZE = 256;
     char recvBuff[BUFFSIZE];
     char sendBuff[BUFFSIZE];
+
+    uint8_t mynumber;
+    QString othername;
 };
 
 #endif // NET_H

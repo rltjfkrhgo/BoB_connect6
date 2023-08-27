@@ -24,7 +24,7 @@ void Net::sendGameStart(const QString &myname, const QString &ip, const QString 
     socket->connectToHost(ip, port.toInt());
 
     struct GameStartData startData;
-    startData.req_res_flag = 0x0;
+    startData.req_res_flag = GAME_START;
     startData.name_length = myname.length();
     sprintf(startData.name, "%s", myname.toStdString().c_str());
 
@@ -41,9 +41,35 @@ void Net::recv()
     struct Connect6ProtocolHdr hdr;
     hdr_parsing(reinterpret_cast<unsigned char*>(recvBuff), sizeof(recvBuff), &hdr);
 
+    switch(hdr.type)
+    {
+    case GAME_START:
+        recvGameStart(hdr);
+        break;
+
+
+    default:
+        break;
+    }  // switch
 }
 
 void Net::send()
 {
 
+}
+
+void Net::recvGameStart(const struct Connect6ProtocolHdr& hdr)
+{
+    struct GameStartData start;
+    game_start_data_parsing(
+                reinterpret_cast<unsigned char*>(recvBuff)+sizeof(hdr),
+                sizeof(start), &start);
+    mynumber = hdr.player_num;
+    othername = start.name;
+    if(mynumber == 1)
+    {  // 내가 검정
+    }
+    else
+    {  // 내가 흰색
+    }
 }
