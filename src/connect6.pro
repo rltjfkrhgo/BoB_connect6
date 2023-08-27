@@ -13,7 +13,7 @@ SOURCES += \
     Connect6.cpp \
     Connect6Type.cpp \
     Controller.cpp \
-    Net.cpp \
+    NetAdapter.cpp \
     RenderArea.cpp \
     Widget.cpp \
     main.cpp
@@ -23,7 +23,7 @@ HEADERS += \
     Connect6.h \
     Connect6Type.h \
     Controller.h \
-    Net.h \
+    NetAdapter.h \
     RenderArea.h \
     Widget.h
 

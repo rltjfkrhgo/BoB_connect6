@@ -1,4 +1,4 @@
-#include "Net.h"
+#include "NetAdapter.h"
 
 #include <QtDebug>
 
@@ -6,20 +6,20 @@
 
 #include "Controller.h"
 
-Net::Net(QObject* parent)
+NetAdapter::NetAdapter(QObject* parent)
     : QObject(parent), socket(new QTcpSocket(this))
 {
     qDebug() << "Net()";
 
-    connect(socket, &QIODevice::readyRead, this, &Net::recv);
+    connect(socket, &QIODevice::readyRead, this, &NetAdapter::recv);
 }
 
-Net::~Net()
+NetAdapter::~NetAdapter()
 {
     qDebug() << "~Net()";
 }
 
-void Net::sendGameStart(const QString &myname, const QString &ip, const QString &port)
+void NetAdapter::sendGameStart(const QString &myname, const QString &ip, const QString &port)
 {
     socket->connectToHost(ip, port.toInt());
 
@@ -34,7 +34,7 @@ void Net::sendGameStart(const QString &myname, const QString &ip, const QString 
     socket->write(sendBuff, sendLen);
 }
 
-void Net::recv()
+void NetAdapter::recv()
 {
     socket->read(recvBuff, sizeof(recvBuff));
 
@@ -53,12 +53,12 @@ void Net::recv()
     }  // switch
 }
 
-void Net::send()
+void NetAdapter::send()
 {
 
 }
 
-void Net::recvGameStart(const struct Connect6ProtocolHdr& hdr)
+void NetAdapter::recvGameStart(const struct Connect6ProtocolHdr& hdr)
 {
     struct GameStartData start;
     game_start_data_parsing(

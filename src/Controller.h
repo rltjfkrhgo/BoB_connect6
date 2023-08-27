@@ -8,7 +8,7 @@
 #include "Bot.h"
 #include "Connect6.h"
 #include "Connect6Type.h"
-#include "Net.h"
+#include "NetAdapter.h"
 
 class Controller : public QObject
 {
@@ -44,7 +44,7 @@ private:
 
     Connect6 connect6;
     QThread botThread;
-    Net* net;
+    NetAdapter* net;
 };
 
 #endif // CONTROLLER_H
