@@ -17,11 +17,11 @@ public:
     void sendGameStart(const QString& myname, const QString& ip, const QString& port);
 
 private slots:
-    void recv();
-    void send();
+    void onRecv();
+    void onSend();
 
 private:
-    void recvGameStart(const struct Connect6ProtocolHdr& hdr);
+    void gameStart(const struct Connect6ProtocolHdr& hdr);
 
     QTcpSocket* socket;
 

@@ -11,7 +11,7 @@ NetAdapter::NetAdapter(QObject* parent)
 {
     qDebug() << "Net()";
 
-    connect(socket, &QIODevice::readyRead, this, &NetAdapter::recv);
+    connect(socket, &QIODevice::readyRead, this, &NetAdapter::onRecv);
 }
 
 NetAdapter::~NetAdapter()
@@ -34,7 +34,7 @@ void NetAdapter::sendGameStart(const QString &myname, const QString &ip, const Q
     socket->write(sendBuff, sendLen);
 }
 
-void NetAdapter::recv()
+void NetAdapter::onRecv()
 {
     socket->read(recvBuff, sizeof(recvBuff));
 
@@ -44,7 +44,7 @@ void NetAdapter::recv()
     switch(hdr.type)
     {
     case GAME_START:
-        recvGameStart(hdr);
+        gameStart(hdr);
         break;
 
 
@@ -53,12 +53,12 @@ void NetAdapter::recv()
     }  // switch
 }
 
-void NetAdapter::send()
+void NetAdapter::onSend()
 {
 
 }
 
-void NetAdapter::recvGameStart(const struct Connect6ProtocolHdr& hdr)
+void NetAdapter::gameStart(const struct Connect6ProtocolHdr& hdr)
 {
     struct GameStartData start;
     game_start_data_parsing(

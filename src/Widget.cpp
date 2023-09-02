@@ -27,6 +27,11 @@ Widget::Widget(QWidget* parent)
     portEdit->setPlaceholderText(tr("Port"));
     portEdit->setValidator(new QIntValidator(1, 65535, this));
 
+    // 편의를 위해
+    nameEdit->setText("kim1");
+    ipEdit->setText(tr("192.168.56.101"));
+    portEdit->setText(tr("8089"));
+
     textEdit = new QTextEdit(this);
     textEdit->setReadOnly(true);
 

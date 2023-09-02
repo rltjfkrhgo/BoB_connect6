@@ -26,6 +26,8 @@ void Controller::reset()
                              std::placeholders::_1, std::placeholders::_2);
     setPieceBot = std::bind(&Controller::setPieceNull, this,
                             std::placeholders::_1, std::placeholders::_2);
+    setPieceNet = std::bind(&Controller::setPieceNull, this,
+                            std::placeholders::_1, std::placeholders::_2);
 
     const Status status = connect6.reset();
 
