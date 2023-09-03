@@ -16,6 +16,9 @@ public:
 
     void sendGameStart(const QString& myname, const QString& ip, const QString& port);
 
+signals:
+    void postGameStart(const Piece myColor, const QString& othername);
+
 private slots:
     void onRecv();
     void onSend();

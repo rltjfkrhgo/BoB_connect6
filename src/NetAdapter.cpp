@@ -68,8 +68,10 @@ void NetAdapter::gameStart(const struct Connect6ProtocolHdr& hdr)
     othername = start.name;
     if(mynumber == 1)
     {  // 내가 검정
+        emit postGameStart(BLACK, othername);
     }
     else
     {  // 내가 흰색
+        emit postGameStart(WHITE, othername);
     }
 }

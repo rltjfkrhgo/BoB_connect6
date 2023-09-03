@@ -76,11 +76,36 @@ void Controller::startBot(Piece userColor)
 void Controller::startNet(const QString& myname, const QString& ip, const QString& port)
 {
     net = new NetAdapter;
+    connect(net, &NetAdapter::postGameStart, this, &Controller::onPostStartNet);
     net->sendGameStart(myname, ip, port);
 
     emit appendTextEdit(tr("게임이 시작되기를 기다리는 중..."));
     // const Status status = connect6.start();
     // emit boardChanged(status);
+}
+
+void Controller::onPostStartNet(const Piece myColor, const QString &othername)
+{
+    switch(myColor)
+    {
+    case BLACK:
+        setPieceBot = std::bind(&Controller::setPieceBlack, this,
+                                 std::placeholders::_1, std::placeholders::_2);
+        setPieceNet = std::bind(&Controller::setPieceWhite, this,
+                                std::placeholders::_1, std::placeholders::_2);
+        break;
+    case WHITE:
+        setPieceBot = std::bind(&Controller::setPieceWhite, this,
+                                 std::placeholders::_1, std::placeholders::_2);
+        setPieceNet = std::bind(&Controller::setPieceBlack, this,
+                                std::placeholders::_1, std::placeholders::_2);
+        break;
+    default:
+        break;
+    }
+
+    const Status status = connect6.start();
+    emit boardChanged(status);
 }
 
 void Controller::setPieceNull([[maybe_unused]] int y, [[maybe_unused]] int x)

@@ -21,6 +21,7 @@ public:
     void startDuo();
     void startBot(Piece userColor);
     void startNet(const QString& myname, const QString& ip, const QString& port);
+    void onPostStartNet(const Piece myColor, const QString& othername);
 
     std::function<void(int, int)> setPieceUser;
     std::function<void(int, int)> setPieceBot;
