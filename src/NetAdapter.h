@@ -21,10 +21,11 @@ signals:
 
 private slots:
     void onRecv();
-    void onSend();
 
 private:
     void gameStart(const struct Connect6ProtocolHdr& hdr);
+    void put(const struct Connect6ProtocolHdr& hdr);
+    void turn(const struct Connect6ProtocolHdr& hdr);
 
     QTcpSocket* socket;
 
