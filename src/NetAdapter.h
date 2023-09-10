@@ -15,6 +15,7 @@ public:
     ~NetAdapter();
 
     void sendGameStart(const QString& myname, const QString& ip, const QString& port);
+    void sendPut(int y1, int x1, int y2, int x2);
 
 signals:
     void postGameStart(const Piece myColor, const QString& othername);

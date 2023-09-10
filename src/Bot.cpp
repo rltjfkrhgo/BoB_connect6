@@ -23,6 +23,13 @@ void Bot::doWork(Status status)
     if(Controller::getInstance()->whoseTurn() != botColor)
         return;
 
+    // 첫 수는 항상 9, 9.
+    if(Controller::getInstance()->getStatus() == START)
+    {
+        Controller::getInstance()->setPieceBot(9, 9);
+        return;
+    }
+
     // 임시로 빈칸 아무곳에나
     for(int y = 0; y < BOARDSIZE; y++)
     {

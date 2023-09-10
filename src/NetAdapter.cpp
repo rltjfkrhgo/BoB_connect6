@@ -34,6 +34,21 @@ void NetAdapter::sendGameStart(const QString &myname, const QString &ip, const Q
     socket->write(sendBuff, sendLen);
 }
 
+void NetAdapter::sendPut(int y1, int x1, int y2, int x2)
+{
+    struct PutTurnData putTurn;
+    size_t sendLen;
+    // PUT 패킷 전송
+    putTurn.coord_num = 2;
+    putTurn.xy[0] = x1;
+    putTurn.xy[1] = y1;
+    putTurn.xy[2] = x2;
+    putTurn.xy[3] = y2;
+    make_put_payload(reinterpret_cast<unsigned char*>(sendBuff),
+                     sizeof(sendBuff), &sendLen, mynumber, putTurn);
+    socket->write((const char*)sendBuff, sendLen);
+}
+
 void NetAdapter::onRecv()
 {
     socket->read(recvBuff, sizeof(recvBuff));
@@ -78,6 +93,8 @@ void NetAdapter::gameStart(const struct Connect6ProtocolHdr& hdr)
 
 void NetAdapter::put(const struct Connect6ProtocolHdr &hdr)
 {
+    // bot이 첫수에는 항상 9, 9를 두도록 수정
+    /*
     struct PutTurnData putTurn;
     // PUT을 받는 경우는 첫 수를 대신 뒀을 때만
     // 따지고 보면 내가 둔거임
@@ -85,6 +102,7 @@ void NetAdapter::put(const struct Connect6ProtocolHdr &hdr)
                 reinterpret_cast<unsigned char*>(recvBuff)+sizeof(hdr),
                 sizeof(putTurn), &putTurn);
     Controller::getInstance()->setPieceBot(putTurn.xy[1], putTurn.xy[0]);
+    */
 }
 
 void NetAdapter::turn(const struct Connect6ProtocolHdr &hdr)

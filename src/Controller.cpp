@@ -80,12 +80,17 @@ void Controller::startNet(const QString& myname, const QString& ip, const QStrin
     net->sendGameStart(myname, ip, port);
 
     emit appendTextEdit(tr("게임이 시작되기를 기다리는 중..."));
-    // const Status status = connect6.start();
-    // emit boardChanged(status);
 }
 
 void Controller::onPostStartNet(const Piece myColor, const QString &othername)
 {
+    Bot* bot = new Bot(myColor);
+    bot->moveToThread(&botThread);
+    connect(&botThread, &QThread::finished, bot, &QObject::deleteLater);
+    qRegisterMetaType<Status>("Status");
+    connect(this, &Controller::boardChanged, bot, &Bot::doWork);
+    botThread.start();
+
     switch(myColor)
     {
     case BLACK:
