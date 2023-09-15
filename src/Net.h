@@ -1,18 +1,18 @@
-#ifndef NETADAPTER_H
-#define NETADAPTER_H
+#ifndef NET_H
+#define NET_H
 
 #include <QObject>
 #include <QTcpSocket>
 
 #include "Connect6Type.h"
 
-class NetAdapter : public QObject
+class Net : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit NetAdapter(QObject* parent = nullptr);
-    ~NetAdapter();
+    explicit Net(QObject* parent = nullptr);
+    ~Net();
 
     void sendGameStart(const QString& myname, const QString& ip, const QString& port);
     void sendPut(int y1, int x1, int y2, int x2);
@@ -38,4 +38,4 @@ private:
     QString othername;
 };
 
-#endif // NETADAPTER_H
+#endif // NET_H

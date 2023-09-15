@@ -75,8 +75,8 @@ void Controller::startBot(Piece userColor)
 
 void Controller::startNet(const QString& myname, const QString& ip, const QString& port)
 {
-    net = new NetAdapter;
-    connect(net, &NetAdapter::postGameStart, this, &Controller::onPostStartNet);
+    net = new Net;
+    connect(net, &Net::postGameStart, this, &Controller::onPostStartNet);
     net->sendGameStart(myname, ip, port);
 
     emit appendTextEdit(tr("게임이 시작되기를 기다리는 중..."));

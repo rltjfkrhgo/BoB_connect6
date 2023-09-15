@@ -1,4 +1,4 @@
-#include "NetAdapter.h"
+#include "Net.h"
 
 #include <QtDebug>
 
@@ -6,20 +6,20 @@
 
 #include "Controller.h"
 
-NetAdapter::NetAdapter(QObject* parent)
+Net::Net(QObject* parent)
     : QObject(parent), socket(new QTcpSocket(this))
 {
     qDebug() << "Net()";
 
-    connect(socket, &QIODevice::readyRead, this, &NetAdapter::onRecv);
+    connect(socket, &QIODevice::readyRead, this, &Net::onRecv);
 }
 
-NetAdapter::~NetAdapter()
+Net::~Net()
 {
     qDebug() << "~Net()";
 }
 
-void NetAdapter::sendGameStart(const QString &myname, const QString &ip, const QString &port)
+void Net::sendGameStart(const QString &myname, const QString &ip, const QString &port)
 {
     socket->connectToHost(ip, port.toInt());
 
@@ -34,7 +34,7 @@ void NetAdapter::sendGameStart(const QString &myname, const QString &ip, const Q
     socket->write(sendBuff, sendLen);
 }
 
-void NetAdapter::sendPut(int y1, int x1, int y2, int x2)
+void Net::sendPut(int y1, int x1, int y2, int x2)
 {
     struct PutTurnData putTurn;
     size_t sendLen;
@@ -49,7 +49,7 @@ void NetAdapter::sendPut(int y1, int x1, int y2, int x2)
     socket->write((const char*)sendBuff, sendLen);
 }
 
-void NetAdapter::onRecv()
+void Net::onRecv()
 {
     socket->read(recvBuff, sizeof(recvBuff));
 
@@ -73,7 +73,7 @@ void NetAdapter::onRecv()
     }  // switch
 }
 
-void NetAdapter::gameStart(const struct Connect6ProtocolHdr& hdr)
+void Net::gameStart(const struct Connect6ProtocolHdr& hdr)
 {
     struct GameStartData start;
     game_start_data_parsing(
@@ -91,7 +91,7 @@ void NetAdapter::gameStart(const struct Connect6ProtocolHdr& hdr)
     }
 }
 
-void NetAdapter::put(const struct Connect6ProtocolHdr &hdr)
+void Net::put(const struct Connect6ProtocolHdr &hdr)
 {
     // bot이 첫수에는 항상 9, 9를 두도록 수정
     /*
@@ -105,7 +105,7 @@ void NetAdapter::put(const struct Connect6ProtocolHdr &hdr)
     */
 }
 
-void NetAdapter::turn(const struct Connect6ProtocolHdr &hdr)
+void Net::turn(const struct Connect6ProtocolHdr &hdr)
 {
     struct PutTurnData putTurn;
     // 상대가 둔거 업데이트
