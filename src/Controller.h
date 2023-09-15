@@ -32,6 +32,7 @@ public:
     Status getStatus() const;
 
 signals:
+    void boardChanged(Piece color, int y, int x);
     void statusChanged(Status status);
     void appendTextEdit(const QString& str);
 

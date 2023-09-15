@@ -121,23 +121,30 @@ void Controller::setPieceNull([[maybe_unused]] int y, [[maybe_unused]] int x)
 
 void Controller::setPieceBlack(int y, int x)
 {
-    const bool ret = connect6.setPiece(BLACK, y, x);
-    if(ret)
+    if(connect6.setPiece(BLACK, y, x))
+    {
+        emit boardChanged(BLACK, y, x);
         emit statusChanged(connect6.getStatus());
+    }
 }
 
 void Controller::setPieceWhite(int y, int x)
 {
-    const bool ret = connect6.setPiece(WHITE, y, x);
-    if(ret)
+    if(connect6.setPiece(WHITE, y, x))
+    {
+        emit boardChanged(WHITE, y, x);
         emit statusChanged(connect6.getStatus());
+    }
 }
 
 void Controller::setPieceDuo(int y, int x)
 {
-    const bool ret = connect6.setPiece(whoseTurn(), y, x);
-    if(ret)
+    const Piece color = connect6.whoseTurn();
+    if(connect6.setPiece(color, y, x))
+    {
+        emit boardChanged(color, y, x);
         emit statusChanged(connect6.getStatus());
+    }
 }
 
 Piece Controller::whoseTurn() const
