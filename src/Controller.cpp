@@ -31,7 +31,7 @@ void Controller::reset()
 
     const Status status = connect6.reset();
 
-    emit boardChanged(status);
+    emit statusChanged(status);
 }
 
 void Controller::startDuo()
@@ -39,7 +39,7 @@ void Controller::startDuo()
     setPieceUser = std::bind(&Controller::setPieceDuo, this,
                              std::placeholders::_1, std::placeholders::_2);
     const Status status = connect6.start();
-    emit boardChanged(status);
+    emit statusChanged(status);
 }
 
 void Controller::startBot(Piece userColor)
@@ -48,7 +48,7 @@ void Controller::startBot(Piece userColor)
     bot->moveToThread(&botThread);
     connect(&botThread, &QThread::finished, bot, &QObject::deleteLater);
     qRegisterMetaType<Status>("Status");
-    connect(this, &Controller::boardChanged, bot, &Bot::doWork);
+    connect(this, &Controller::statusChanged, bot, &Bot::doWork);
     botThread.start();
 
     switch(userColor)
@@ -70,7 +70,7 @@ void Controller::startBot(Piece userColor)
     }
 
     const Status status = connect6.start();
-    emit boardChanged(status);
+    emit statusChanged(status);
 }
 
 void Controller::startNet(const QString& myname, const QString& ip, const QString& port)
@@ -88,7 +88,7 @@ void Controller::onPostStartNet(const Piece myColor, const QString &othername)
     bot->moveToThread(&botThread);
     connect(&botThread, &QThread::finished, bot, &QObject::deleteLater);
     qRegisterMetaType<Status>("Status");
-    connect(this, &Controller::boardChanged, bot, &Bot::doWork);
+    connect(this, &Controller::statusChanged, bot, &Bot::doWork);
     botThread.start();
 
     switch(myColor)
@@ -110,7 +110,7 @@ void Controller::onPostStartNet(const Piece myColor, const QString &othername)
     }
 
     const Status status = connect6.start();
-    emit boardChanged(status);
+    emit statusChanged(status);
 }
 
 void Controller::setPieceNull([[maybe_unused]] int y, [[maybe_unused]] int x)
@@ -122,19 +122,19 @@ void Controller::setPieceNull([[maybe_unused]] int y, [[maybe_unused]] int x)
 void Controller::setPieceBlack(int y, int x)
 {
     const Status status = connect6.setPiece(BLACK, y, x);
-    emit boardChanged(status);
+    emit statusChanged(status);
 }
 
 void Controller::setPieceWhite(int y, int x)
 {
     const Status status = connect6.setPiece(WHITE, y, x);
-    emit boardChanged(status);
+    emit statusChanged(status);
 }
 
 void Controller::setPieceDuo(int y, int x)
 {
     const Status status = connect6.setPiece(whoseTurn(), y, x);
-    emit boardChanged(status);
+    emit statusChanged(status);
 }
 
 Piece Controller::whoseTurn() const

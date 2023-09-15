@@ -32,7 +32,7 @@ public:
     Status getStatus() const;
 
 signals:
-    void boardChanged(Status status);
+    void statusChanged(Status status);
     void appendTextEdit(const QString& str);
 
 private:

@@ -35,7 +35,7 @@ Widget::Widget(QWidget* parent)
     textEdit = new QTextEdit(this);
     textEdit->setReadOnly(true);
 
-    connect(Controller::getInstance(), &Controller::boardChanged,
+    connect(Controller::getInstance(), &Controller::statusChanged,
             this, &Widget::onBoardChanged);
     connect(Controller::getInstance(), &Controller::appendTextEdit,
             this, &Widget::onAppendTextEdit);
