@@ -10,10 +10,10 @@ public:
 
     Piece  whoseTurn() const;
     Piece  getBoard(int y, int x) const;
-    Status reset();
-    Status start();
     Status getStatus() const;
-    Status setPiece(Piece color, int y, int x);
+    bool   reset();
+    bool   start();
+    bool   setPiece(Piece color, int y, int x);
 
 private:
     bool   isEnd(Piece color, int y, int x) const;

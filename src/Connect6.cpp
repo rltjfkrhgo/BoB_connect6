@@ -28,35 +28,35 @@ Piece Connect6::getBoard(int y, int x) const
     return board[y][x];
 }
 
-Status Connect6::reset()
-{
-    std::memset(board, 0, sizeof(Piece)*BOARDSIZE*BOARDSIZE);
-    status = READY;
-    return status;
-}
-
-Status Connect6::start()
-{
-    status = START;
-    return status;
-}
-
 Status Connect6::getStatus() const
 {
     return status;
 }
 
-Status Connect6::setPiece(Piece color, int y, int x)
+bool Connect6::reset()
+{
+    std::memset(board, 0, sizeof(Piece)*BOARDSIZE*BOARDSIZE);
+    status = READY;
+    return true;
+}
+
+bool Connect6::start()
+{
+    status = START;
+    return true;
+}
+
+bool Connect6::setPiece(Piece color, int y, int x)
 {
     if(y < 0 || BOARDSIZE <= y ||
        x < 0 || BOARDSIZE <= x)
-        return status;
+        return false;
 
     if(whoseTurn() != color)
-        return status;
+        return false;
 
     if(board[y][x] != EMPTY)
-        return status;
+        return false;
 
     board[y][x] = color;
 
@@ -71,7 +71,7 @@ Status Connect6::setPiece(Piece color, int y, int x)
     {
         status = nextStatus(status);
     }
-    return status;
+    return true;
 }
 
 bool Connect6::isEnd(Piece color, int Y, int X) const

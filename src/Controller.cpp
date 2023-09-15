@@ -29,17 +29,17 @@ void Controller::reset()
     setPieceNet = std::bind(&Controller::setPieceNull, this,
                             std::placeholders::_1, std::placeholders::_2);
 
-    const Status status = connect6.reset();
+    connect6.reset();
 
-    emit statusChanged(status);
+    emit statusChanged(connect6.getStatus());
 }
 
 void Controller::startDuo()
 {
     setPieceUser = std::bind(&Controller::setPieceDuo, this,
                              std::placeholders::_1, std::placeholders::_2);
-    const Status status = connect6.start();
-    emit statusChanged(status);
+    connect6.start();
+    emit statusChanged(connect6.getStatus());
 }
 
 void Controller::startBot(Piece userColor)
@@ -69,8 +69,8 @@ void Controller::startBot(Piece userColor)
         break;
     }
 
-    const Status status = connect6.start();
-    emit statusChanged(status);
+    connect6.start();
+    emit statusChanged(connect6.getStatus());
 }
 
 void Controller::startNet(const QString& myname, const QString& ip, const QString& port)
@@ -109,8 +109,8 @@ void Controller::onPostStartNet(const Piece myColor, const QString &othername)
         break;
     }
 
-    const Status status = connect6.start();
-    emit statusChanged(status);
+    connect6.start();
+    emit statusChanged(connect6.getStatus());
 }
 
 void Controller::setPieceNull([[maybe_unused]] int y, [[maybe_unused]] int x)
@@ -121,20 +121,23 @@ void Controller::setPieceNull([[maybe_unused]] int y, [[maybe_unused]] int x)
 
 void Controller::setPieceBlack(int y, int x)
 {
-    const Status status = connect6.setPiece(BLACK, y, x);
-    emit statusChanged(status);
+    const bool ret = connect6.setPiece(BLACK, y, x);
+    if(ret)
+        emit statusChanged(connect6.getStatus());
 }
 
 void Controller::setPieceWhite(int y, int x)
 {
-    const Status status = connect6.setPiece(WHITE, y, x);
-    emit statusChanged(status);
+    const bool ret = connect6.setPiece(WHITE, y, x);
+    if(ret)
+        emit statusChanged(connect6.getStatus());
 }
 
 void Controller::setPieceDuo(int y, int x)
 {
-    const Status status = connect6.setPiece(whoseTurn(), y, x);
-    emit statusChanged(status);
+    const bool ret = connect6.setPiece(whoseTurn(), y, x);
+    if(ret)
+        emit statusChanged(connect6.getStatus());
 }
 
 Piece Controller::whoseTurn() const
