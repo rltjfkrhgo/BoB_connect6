@@ -4,8 +4,6 @@
 
 #include <connect6_protocol.h>
 
-#include "Controller.h"
-
 Net::Net(QObject* parent)
     : QObject(parent), socket(new QTcpSocket(this))
 {
@@ -62,7 +60,8 @@ void Net::onRecv()
         gameStart(hdr);
         break;
     case PUT:
-        put(hdr);
+        // PUT을 받는 경우는 첫 수를 대신 뒀을 때만
+        // bot이 첫수에는 항상 9, 9를 두도록 수정
         break;
     case TURN:
         turn(hdr);
@@ -91,20 +90,6 @@ void Net::gameStart(const struct Connect6ProtocolHdr& hdr)
     }
 }
 
-void Net::put(const struct Connect6ProtocolHdr &hdr)
-{
-    // bot이 첫수에는 항상 9, 9를 두도록 수정
-    /*
-    struct PutTurnData putTurn;
-    // PUT을 받는 경우는 첫 수를 대신 뒀을 때만
-    // 따지고 보면 내가 둔거임
-    put_turn_data_parsing(
-                reinterpret_cast<unsigned char*>(recvBuff)+sizeof(hdr),
-                sizeof(putTurn), &putTurn);
-    Controller::getInstance()->setPieceBot(putTurn.xy[1], putTurn.xy[0]);
-    */
-}
-
 void Net::turn(const struct Connect6ProtocolHdr &hdr)
 {
     struct PutTurnData putTurn;
@@ -114,11 +99,11 @@ void Net::turn(const struct Connect6ProtocolHdr &hdr)
                 sizeof(putTurn), &putTurn);
     if(putTurn.coord_num == 2)
     {
-        Controller::getInstance()->setPieceNet(putTurn.xy[1], putTurn.xy[0]);
-        Controller::getInstance()->setPieceNet(putTurn.xy[3], putTurn.xy[2]);
+        emit setPieceNet(putTurn.xy[1], putTurn.xy[0]);
+        emit setPieceNet(putTurn.xy[3], putTurn.xy[2]);
     }
     else  // 내가 흰색이면 처음에 저쪽에서 1개만 둠
     {
-        Controller::getInstance()->setPieceNet(putTurn.xy[1], putTurn.xy[0]);
+        emit setPieceNet(putTurn.xy[1], putTurn.xy[0]);
     }
 }

@@ -4,7 +4,9 @@
 #include <QWidget>
 #include <QtWidgets>
 
+#include "Bot.h"
 #include "Connect6Type.h"
+#include "Net.h"
 #include "RenderArea.h"
 
 class Widget : public QWidget
@@ -23,6 +25,7 @@ private slots:
     void onSoloBlackStartButtonClicked();
     void onSoloWhiteStartButtonClicked();
     void onNetworkStartButtonClicked();
+    void onPostStartNet(const Piece myColor, const QString& othername);
 
 private:
     RenderArea* renderArea;
@@ -37,6 +40,9 @@ private:
     QLineEdit* ipEdit;
     QLineEdit* portEdit;
     QTextEdit* textEdit;
+
+    QThread botThread;
+    Net* net;
 };
 
 #endif // WIDGET_H

@@ -3,7 +3,7 @@
 #include "Controller.h"
 
 Widget::Widget(QWidget* parent)
-    : QWidget(parent)
+    : QWidget(parent), net(nullptr)
 {
     renderArea = new RenderArea;
 
@@ -116,6 +116,12 @@ void Widget::onAppendTextEdit(const QString& str)
 
 void Widget::onResetButtonClicked()
 {
+    if(net)
+    {
+        delete net;
+        net = nullptr;
+    }
+
     startDuoButton->setEnabled(true);
     soloBlackStartButton->setEnabled(true);
     soloWhiteStartButton->setEnabled(true);
@@ -161,7 +167,37 @@ void Widget::onNetworkStartButtonClicked()
     soloWhiteStartButton->setEnabled(false);
     networkStartButton->setEnabled(false);
 
-    Controller::getInstance()->startNet(nameEdit->text(),
-                                        ipEdit->text(),
-                                        portEdit->text());
+    net = new Net(this);
+    connect(net, &Net::postGameStart, this, &Widget::onPostStartNet);
+    net->sendGameStart(nameEdit->text(), ipEdit->text(), portEdit->text());
+    textEdit->append(tr("게임이 시작되기를 기다리는 중..."));
+}
+
+void Widget::onPostStartNet(const Piece myColor, const QString& othername)
+{
+    Bot* bot = new Bot(myColor);
+    bot->moveToThread(&botThread);
+    connect(&botThread, &QThread::finished, bot, &QObject::deleteLater);
+    qRegisterMetaType<Status>("Status");
+    connect(Controller::getInstance(), &Controller::statusChanged,
+            bot, &Bot::doWork);
+    botThread.start();
+
+    switch(myColor)
+    {
+    case BLACK:
+        Controller::getInstance()->setPieceBot = std::bind(&Controller::setPieceBlack, Controller::getInstance(),
+                                 std::placeholders::_1, std::placeholders::_2);
+        connect(net, &Net::setPieceNet, Controller::getInstance(), &Controller::setPieceWhite);
+        break;
+    case WHITE:
+        Controller::getInstance()->setPieceBot = std::bind(&Controller::setPieceWhite, Controller::getInstance(),
+                                 std::placeholders::_1, std::placeholders::_2);
+        connect(net, &Net::setPieceNet, Controller::getInstance(), &Controller::setPieceBlack);
+        break;
+    default:
+        break;
+    }
+
+    Controller::getInstance()->start();
 }

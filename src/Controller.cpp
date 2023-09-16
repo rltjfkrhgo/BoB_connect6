@@ -26,8 +26,6 @@ void Controller::reset()
                              std::placeholders::_1, std::placeholders::_2);
     setPieceBot = std::bind(&Controller::setPieceNull, this,
                             std::placeholders::_1, std::placeholders::_2);
-    setPieceNet = std::bind(&Controller::setPieceNull, this,
-                            std::placeholders::_1, std::placeholders::_2);
 
     connect6.reset();
 
@@ -69,46 +67,6 @@ void Controller::startBot(Piece userColor)
         setPieceUser = std::bind(&Controller::setPieceWhite, this,
                                  std::placeholders::_1, std::placeholders::_2);
         setPieceBot = std::bind(&Controller::setPieceBlack, this,
-                                std::placeholders::_1, std::placeholders::_2);
-        break;
-    default:
-        break;
-    }
-
-    connect6.start();
-    emit statusChanged(connect6.getStatus());
-}
-
-void Controller::startNet(const QString& myname, const QString& ip, const QString& port)
-{
-    net = new Net;
-    connect(net, &Net::postGameStart, this, &Controller::onPostStartNet);
-    net->sendGameStart(myname, ip, port);
-
-    emit appendTextEdit(tr("게임이 시작되기를 기다리는 중..."));
-}
-
-void Controller::onPostStartNet(const Piece myColor, const QString &othername)
-{
-    Bot* bot = new Bot(myColor);
-    bot->moveToThread(&botThread);
-    connect(&botThread, &QThread::finished, bot, &QObject::deleteLater);
-    qRegisterMetaType<Status>("Status");
-    connect(this, &Controller::statusChanged, bot, &Bot::doWork);
-    botThread.start();
-
-    switch(myColor)
-    {
-    case BLACK:
-        setPieceBot = std::bind(&Controller::setPieceBlack, this,
-                                 std::placeholders::_1, std::placeholders::_2);
-        setPieceNet = std::bind(&Controller::setPieceWhite, this,
-                                std::placeholders::_1, std::placeholders::_2);
-        break;
-    case WHITE:
-        setPieceBot = std::bind(&Controller::setPieceWhite, this,
-                                 std::placeholders::_1, std::placeholders::_2);
-        setPieceNet = std::bind(&Controller::setPieceBlack, this,
                                 std::placeholders::_1, std::placeholders::_2);
         break;
     default:

@@ -19,13 +19,13 @@ public:
 
 signals:
     void postGameStart(const Piece myColor, const QString& othername);
+    void setPieceNet(const int y, const int x);
 
 private slots:
     void onRecv();
 
 private:
     void gameStart(const struct Connect6ProtocolHdr& hdr);
-    void put(const struct Connect6ProtocolHdr& hdr);
     void turn(const struct Connect6ProtocolHdr& hdr);
 
     QTcpSocket* socket;
