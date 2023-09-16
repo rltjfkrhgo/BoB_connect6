@@ -23,6 +23,7 @@ void RenderArea::mousePressEvent(QMouseEvent* event)
     const int y = event->y() / RECTSIZE;
 
     Controller::getInstance()->setPieceUser(y, x);
+    emit setPieceUser(y, x);
 }
 
 void RenderArea::paintEvent([[maybe_unused]] QPaintEvent* event)

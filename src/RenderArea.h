@@ -11,6 +11,9 @@ public:
     explicit RenderArea(QWidget* parent = nullptr);
     QSize sizeHint() const override;
 
+signals:
+    void setPieceUser(int y, int x);
+
 protected:
     void mousePressEvent(QMouseEvent* event) override;
     void paintEvent(QPaintEvent* event) override;
