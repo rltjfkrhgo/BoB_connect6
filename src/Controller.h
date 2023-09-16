@@ -18,6 +18,7 @@ public:
     static Controller* getInstance();
 
     void reset();
+    void start();
     void startDuo();
     void startBot(Piece userColor);
     void startNet(const QString& myname, const QString& ip, const QString& port);
@@ -26,6 +27,11 @@ public:
     std::function<void(int, int)> setPieceUser;
     std::function<void(int, int)> setPieceBot;
     std::function<void(int, int)> setPieceNet;
+
+    void setPieceNull(int y, int x);
+    void setPieceBlack(int y, int x);
+    void setPieceWhite(int y, int x);
+    void setPieceDuo(int y, int x);
 
     Piece  whoseTurn() const;
     Piece  getBoard(int y, int x) const;
@@ -38,11 +44,6 @@ signals:
 
 private:
     explicit Controller(QObject* parent = nullptr);
-
-    void setPieceNull(int y, int x);
-    void setPieceBlack(int y, int x);
-    void setPieceWhite(int y, int x);
-    void setPieceDuo(int y, int x);
 
     Connect6 connect6;
     QThread botThread;

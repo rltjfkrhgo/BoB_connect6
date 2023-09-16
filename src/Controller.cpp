@@ -34,6 +34,12 @@ void Controller::reset()
     emit statusChanged(connect6.getStatus());
 }
 
+void Controller::start()
+{
+    connect6.start();
+    emit statusChanged(connect6.getStatus());
+}
+
 void Controller::startDuo()
 {
     setPieceUser = std::bind(&Controller::setPieceDuo, this,
