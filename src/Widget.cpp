@@ -175,6 +175,8 @@ void Widget::onNetworkStartButtonClicked()
 
 void Widget::onPostStartNet(const Piece myColor, const QString& othername)
 {
+    textEdit->append("["+othername+"]님이 입장하셨습니다.");
+
     Bot* bot = new Bot(myColor);
     bot->moveToThread(&botThread);
     connect(&botThread, &QThread::finished, bot, &QObject::deleteLater);
@@ -182,6 +184,9 @@ void Widget::onPostStartNet(const Piece myColor, const QString& othername)
     connect(Controller::getInstance(), &Controller::statusChanged,
             bot, &Bot::doWork);
     botThread.start();
+
+    qRegisterMetaType<Status>("Piece");
+    connect(Controller::getInstance(), &Controller::boardChanged, net, &Net::onBoardChanged);
 
     switch(myColor)
     {

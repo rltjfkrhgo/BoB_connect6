@@ -18,10 +18,6 @@ void Controller::reset()
     botThread.quit();
     botThread.wait();
 
-    if(net != nullptr)
-        delete net;
-    net = nullptr;
-
     setPieceUser = std::bind(&Controller::setPieceNull, this,
                              std::placeholders::_1, std::placeholders::_2);
     setPieceBot = std::bind(&Controller::setPieceNull, this,

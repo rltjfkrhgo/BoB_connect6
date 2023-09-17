@@ -15,7 +15,9 @@ public:
     ~Net();
 
     void sendGameStart(const QString& myname, const QString& ip, const QString& port);
-    void sendPut(int y1, int x1, int y2, int x2);
+
+public slots:
+    void onBoardChanged(const Piece color, const int y, const int x);
 
 signals:
     void postGameStart(const Piece myColor, const QString& othername);
@@ -27,6 +29,7 @@ private slots:
 private:
     void gameStart(const struct Connect6ProtocolHdr& hdr);
     void turn(const struct Connect6ProtocolHdr& hdr);
+    void sendPut(int y1, int x1, int y2, int x2);
 
     QTcpSocket* socket;
 
@@ -36,6 +39,8 @@ private:
 
     uint8_t mynumber;
     QString othername;
+
+    Piece myColor;
 };
 
 #endif // NET_H
