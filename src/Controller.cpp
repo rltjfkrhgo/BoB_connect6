@@ -15,23 +15,12 @@ Controller* Controller::getInstance()
 
 void Controller::reset()
 {
-    setPieceUser = std::bind(&Controller::setPieceNull, this,
-                             std::placeholders::_1, std::placeholders::_2);
     connect6.reset();
-
     emit statusChanged(connect6.getStatus());
 }
 
 void Controller::start()
 {
-    connect6.start();
-    emit statusChanged(connect6.getStatus());
-}
-
-void Controller::startDuo()
-{
-    setPieceUser = std::bind(&Controller::setPieceDuo, this,
-                             std::placeholders::_1, std::placeholders::_2);
     connect6.start();
     emit statusChanged(connect6.getStatus());
 }

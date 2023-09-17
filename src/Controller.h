@@ -2,7 +2,6 @@
 #define CONTROLLER_H
 
 #include <QObject>
-#include <functional>
 
 #include "Connect6.h"
 #include "Connect6Type.h"
@@ -16,9 +15,6 @@ public:
 
     void reset();
     void start();
-    void startDuo();
-
-    std::function<void(int, int)> setPieceUser;
 
     void setPieceNull(int y, int x);
     void setPieceBlack(int y, int x);

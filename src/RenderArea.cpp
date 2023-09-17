@@ -22,7 +22,6 @@ void RenderArea::mousePressEvent(QMouseEvent* event)
     const int x = event->x() / RECTSIZE;
     const int y = event->y() / RECTSIZE;
 
-    Controller::getInstance()->setPieceUser(y, x);
     emit setPieceUser(y, x);
 }
 

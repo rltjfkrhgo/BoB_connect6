@@ -130,6 +130,9 @@ void Widget::onResetButtonClicked()
     soloWhiteStartButton->setEnabled(true);
     networkStartButton->setEnabled(true);
 
+    connect(renderArea, &RenderArea::setPieceUser,
+            Controller::getInstance(), &Controller::setPieceNull);
+
     Controller::getInstance()->reset();
 }
 
@@ -140,7 +143,10 @@ void Widget::onStartDuoButtonClicked()
     soloWhiteStartButton->setEnabled(false);
     networkStartButton->setEnabled(false);
 
-    Controller::getInstance()->startDuo();
+    connect(renderArea, &RenderArea::setPieceUser,
+            Controller::getInstance(), &Controller::setPieceDuo);
+
+    Controller::getInstance()->start();
 }
 
 void Widget::onSoloBlackStartButtonClicked()
