@@ -19,7 +19,6 @@ public:
 
 private slots:
     void onBoardChanged(Status status);
-    void onAppendTextEdit(const QString& str);
     void onResetButtonClicked();
     void onStartDuoButtonClicked();
     void onSoloBlackStartButtonClicked();

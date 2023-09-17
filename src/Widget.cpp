@@ -37,8 +37,6 @@ Widget::Widget(QWidget* parent)
 
     connect(Controller::getInstance(), &Controller::statusChanged,
             this, &Widget::onBoardChanged);
-    connect(Controller::getInstance(), &Controller::appendTextEdit,
-            this, &Widget::onAppendTextEdit);
 
     connect(startDuoButton, &QPushButton::clicked,
             this, &Widget::onStartDuoButtonClicked);
@@ -107,11 +105,6 @@ void Widget::onBoardChanged(Status status)
     }
 
     statusLabel->setText(str);
-}
-
-void Widget::onAppendTextEdit(const QString& str)
-{
-    textEdit->append(str);
 }
 
 void Widget::onResetButtonClicked()
