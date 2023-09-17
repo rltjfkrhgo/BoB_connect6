@@ -162,8 +162,8 @@ void Widget::startBot(const Piece userColor)
     Bot* bot = new Bot(!userColor);
     bot->moveToThread(&botThread);
     connect(&botThread, &QThread::finished, bot, &QObject::deleteLater);
-    qRegisterMetaType<Status>("Status");
-    connect(Controller::getInstance(), &Controller::statusChanged, bot, &Bot::doWork);
+    qRegisterMetaType<Piece>("Piece");
+    connect(Controller::getInstance(), &Controller::boardChanged, bot, &Bot::doWork);
     botThread.start();
 
     switch(userColor)
@@ -185,6 +185,9 @@ void Widget::startBot(const Piece userColor)
     }
 
     Controller::getInstance()->start();
+
+    // bot이 첫 수를 두도록 함.
+    bot->doWork(EMPTY, 9, 9);
 }
 
 void Widget::onNetworkStartButtonClicked()
@@ -207,12 +210,11 @@ void Widget::onPostStartNet(const Piece myColor, const QString& othername)
     Bot* bot = new Bot(myColor);
     bot->moveToThread(&botThread);
     connect(&botThread, &QThread::finished, bot, &QObject::deleteLater);
-    qRegisterMetaType<Status>("Status");
-    connect(Controller::getInstance(), &Controller::statusChanged,
+    qRegisterMetaType<Piece>("Piece");
+    connect(Controller::getInstance(), &Controller::boardChanged,
             bot, &Bot::doWork);
     botThread.start();
 
-    qRegisterMetaType<Status>("Piece");
     connect(Controller::getInstance(), &Controller::boardChanged, net, &Net::onBoardChanged);
 
     switch(myColor)

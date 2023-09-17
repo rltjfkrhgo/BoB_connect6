@@ -14,15 +14,14 @@ public:
     ~Bot();
 
 public slots:
-    void doWork(Status status);
+    void doWork(const Piece color, const int y, const int x);
 
 signals:
     void setPieceBot(const int y, const int x);
 
 private:
     Piece botColor;
-    Piece userColor;
-
+    Piece board[BOARDSIZE][BOARDSIZE];
     int weight[BOARDSIZE][BOARDSIZE];
 };
 

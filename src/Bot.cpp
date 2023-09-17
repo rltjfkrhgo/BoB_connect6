@@ -1,14 +1,18 @@
 #include "Bot.h"
 
-#include <QThread>
+#include <cstring>
+
 #include <QtDebug>
 
 #include "Controller.h"
 
 Bot::Bot(Piece _botColor, QObject* parent)
-    : QObject(parent), botColor(_botColor), userColor(!_botColor)
+    : QObject(parent), botColor(_botColor)
 {
     qDebug() << "Bot()";
+
+    std::memset(board, 0, sizeof(Piece)*BOARDSIZE*BOARDSIZE);
+    std::memset(weight, 0, sizeof(int)*BOARDSIZE*BOARDSIZE);
 }
 
 Bot::~Bot()
@@ -16,15 +20,17 @@ Bot::~Bot()
     qDebug() << "~Bot()";
 }
 
-void Bot::doWork(Status status)
+void Bot::doWork(const Piece color, const int y, const int x)
 {
-    qDebug() << "doWork() " << status;
+    qDebug() << "doWork()";
+
+    board[y][x] = color;
 
     if(Controller::getInstance()->whoseTurn() != botColor)
         return;
 
     // 첫 수는 항상 9, 9.
-    if(status == START)
+    if(Controller::getInstance()->getStatus() == START)
     {
         emit setPieceBot(9, 9);
         return;
