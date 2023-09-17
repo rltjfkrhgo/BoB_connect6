@@ -2,10 +2,8 @@
 #define CONTROLLER_H
 
 #include <QObject>
-#include <QThread>
 #include <functional>
 
-#include "Bot.h"
 #include "Connect6.h"
 #include "Connect6Type.h"
 
@@ -19,10 +17,8 @@ public:
     void reset();
     void start();
     void startDuo();
-    void startBot(Piece userColor);
 
     std::function<void(int, int)> setPieceUser;
-    std::function<void(int, int)> setPieceBot;
 
     void setPieceNull(int y, int x);
     void setPieceBlack(int y, int x);
@@ -42,7 +38,6 @@ private:
     explicit Controller(QObject* parent = nullptr);
 
     Connect6 connect6;
-    QThread botThread;
 };
 
 #endif // CONTROLLER_H

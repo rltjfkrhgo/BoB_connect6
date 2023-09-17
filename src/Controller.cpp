@@ -15,14 +15,8 @@ Controller* Controller::getInstance()
 
 void Controller::reset()
 {
-    botThread.quit();
-    botThread.wait();
-
     setPieceUser = std::bind(&Controller::setPieceNull, this,
                              std::placeholders::_1, std::placeholders::_2);
-    setPieceBot = std::bind(&Controller::setPieceNull, this,
-                            std::placeholders::_1, std::placeholders::_2);
-
     connect6.reset();
 
     emit statusChanged(connect6.getStatus());
@@ -38,37 +32,6 @@ void Controller::startDuo()
 {
     setPieceUser = std::bind(&Controller::setPieceDuo, this,
                              std::placeholders::_1, std::placeholders::_2);
-    connect6.start();
-    emit statusChanged(connect6.getStatus());
-}
-
-void Controller::startBot(Piece userColor)
-{
-    Bot* bot = new Bot(!userColor);
-    bot->moveToThread(&botThread);
-    connect(&botThread, &QThread::finished, bot, &QObject::deleteLater);
-    qRegisterMetaType<Status>("Status");
-    connect(this, &Controller::statusChanged, bot, &Bot::doWork);
-    botThread.start();
-
-    switch(userColor)
-    {
-    case BLACK:
-        setPieceUser = std::bind(&Controller::setPieceBlack, this,
-                                 std::placeholders::_1, std::placeholders::_2);
-        setPieceBot = std::bind(&Controller::setPieceWhite, this,
-                                std::placeholders::_1, std::placeholders::_2);
-        break;
-    case WHITE:
-        setPieceUser = std::bind(&Controller::setPieceWhite, this,
-                                 std::placeholders::_1, std::placeholders::_2);
-        setPieceBot = std::bind(&Controller::setPieceBlack, this,
-                                std::placeholders::_1, std::placeholders::_2);
-        break;
-    default:
-        break;
-    }
-
     connect6.start();
     emit statusChanged(connect6.getStatus());
 }

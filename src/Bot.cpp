@@ -24,9 +24,9 @@ void Bot::doWork(Status status)
         return;
 
     // 첫 수는 항상 9, 9.
-    if(Controller::getInstance()->getStatus() == START)
+    if(status == START)
     {
-        Controller::getInstance()->setPieceBot(9, 9);
+        emit setPieceBot(9, 9);
         return;
     }
 
@@ -37,7 +37,7 @@ void Bot::doWork(Status status)
         {
             if(Controller::getInstance()->getBoard(y, x) == EMPTY)
             {
-                Controller::getInstance()->setPieceBot(y, x);
+                emit setPieceBot(y, x);
                 return;
             }
         }

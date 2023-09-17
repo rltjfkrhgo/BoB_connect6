@@ -116,6 +116,9 @@ void Widget::onAppendTextEdit(const QString& str)
 
 void Widget::onResetButtonClicked()
 {
+    botThread.quit();
+    botThread.wait();
+
     if(net)
     {
         delete net;
@@ -142,22 +145,47 @@ void Widget::onStartDuoButtonClicked()
 
 void Widget::onSoloBlackStartButtonClicked()
 {
-    startDuoButton->setEnabled(false);
-    soloBlackStartButton->setEnabled(false);
-    soloWhiteStartButton->setEnabled(false);
-    networkStartButton->setEnabled(false);
-
-    Controller::getInstance()->startBot(BLACK);
+    startBot(BLACK);
 }
 
 void Widget::onSoloWhiteStartButtonClicked()
+{
+    startBot(WHITE);
+}
+
+void Widget::startBot(const Piece userColor)
 {
     startDuoButton->setEnabled(false);
     soloBlackStartButton->setEnabled(false);
     soloWhiteStartButton->setEnabled(false);
     networkStartButton->setEnabled(false);
 
-    Controller::getInstance()->startBot(WHITE);
+    Bot* bot = new Bot(!userColor);
+    bot->moveToThread(&botThread);
+    connect(&botThread, &QThread::finished, bot, &QObject::deleteLater);
+    qRegisterMetaType<Status>("Status");
+    connect(Controller::getInstance(), &Controller::statusChanged, bot, &Bot::doWork);
+    botThread.start();
+
+    switch(userColor)
+    {
+    case BLACK:
+        connect(renderArea, &RenderArea::setPieceUser,
+                Controller::getInstance(), &Controller::setPieceBlack);
+        connect(bot, &Bot::setPieceBot,
+                Controller::getInstance(), &Controller::setPieceWhite);
+        break;
+    case WHITE:
+        connect(renderArea, &RenderArea::setPieceUser,
+                Controller::getInstance(), &Controller::setPieceWhite);
+        connect(bot, &Bot::setPieceBot,
+                Controller::getInstance(), &Controller::setPieceBlack);
+        break;
+    default:
+        break;
+    }
+
+    Controller::getInstance()->start();
 }
 
 void Widget::onNetworkStartButtonClicked()
@@ -191,13 +219,13 @@ void Widget::onPostStartNet(const Piece myColor, const QString& othername)
     switch(myColor)
     {
     case BLACK:
-        Controller::getInstance()->setPieceBot = std::bind(&Controller::setPieceBlack, Controller::getInstance(),
-                                 std::placeholders::_1, std::placeholders::_2);
+        connect(bot, &Bot::setPieceBot,
+                Controller::getInstance(), &Controller::setPieceBlack);
         connect(net, &Net::setPieceNet, Controller::getInstance(), &Controller::setPieceWhite);
         break;
     case WHITE:
-        Controller::getInstance()->setPieceBot = std::bind(&Controller::setPieceWhite, Controller::getInstance(),
-                                 std::placeholders::_1, std::placeholders::_2);
+        connect(bot, &Bot::setPieceBot,
+                Controller::getInstance(), &Controller::setPieceWhite);
         connect(net, &Net::setPieceNet, Controller::getInstance(), &Controller::setPieceBlack);
         break;
     default:

@@ -28,6 +28,8 @@ private slots:
     void onPostStartNet(const Piece myColor, const QString& othername);
 
 private:
+    void startBot(const Piece userColor);
+
     RenderArea* renderArea;
 
     QLabel* statusLabel;

@@ -17,7 +17,7 @@ public slots:
     void doWork(Status status);
 
 signals:
-    void resultReady();
+    void setPieceBot(const int y, const int x);
 
 private:
     Piece botColor;
