@@ -42,7 +42,7 @@ private:
     QLineEdit* portEdit;
     QTextEdit* textEdit;
 
-    QThread botThread;
+    Bot* bot;
     Net* net;
 };
 

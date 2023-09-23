@@ -3,7 +3,7 @@
 #include "Controller.h"
 
 Widget::Widget(QWidget* parent)
-    : QWidget(parent), net(nullptr)
+    : QWidget(parent), bot(nullptr), net(nullptr)
 {
     renderArea = new RenderArea;
 
@@ -109,8 +109,11 @@ void Widget::onBoardChanged(Status status)
 
 void Widget::onResetButtonClicked()
 {
-    botThread.quit();
-    botThread.wait();
+    if(bot)
+    {
+        delete bot;
+        bot = nullptr;
+    }
 
     if(net)
     {
@@ -159,12 +162,11 @@ void Widget::startBot(const Piece userColor)
     soloWhiteStartButton->setEnabled(false);
     networkStartButton->setEnabled(false);
 
-    Bot* bot = new Bot(!userColor);
-    bot->moveToThread(&botThread);
-    connect(&botThread, &QThread::finished, bot, &QObject::deleteLater);
-    qRegisterMetaType<Piece>("Piece");
-    connect(Controller::getInstance(), &Controller::boardChanged, bot, &Bot::doWork);
-    botThread.start();
+    bot = new Bot(!userColor);
+    connect(Controller::getInstance(), &Controller::boardChanged,
+            bot, &Bot::onBoardChanged);
+    connect(Controller::getInstance(), &Controller::statusChanged,
+            bot, &Bot::onStatusChanged);
 
     switch(userColor)
     {
@@ -185,9 +187,6 @@ void Widget::startBot(const Piece userColor)
     }
 
     Controller::getInstance()->start();
-
-    // bot이 첫 수를 두도록 함.
-    bot->doWork(EMPTY, 9, 9);
 }
 
 void Widget::onNetworkStartButtonClicked()
@@ -207,27 +206,27 @@ void Widget::onPostStartNet(const Piece myColor, const QString& othername)
 {
     textEdit->append("["+othername+"]님이 입장하셨습니다.");
 
-    Bot* bot = new Bot(myColor);
-    bot->moveToThread(&botThread);
-    connect(&botThread, &QThread::finished, bot, &QObject::deleteLater);
-    qRegisterMetaType<Piece>("Piece");
-    connect(Controller::getInstance(), &Controller::boardChanged,
-            bot, &Bot::doWork);
-    botThread.start();
-
     connect(Controller::getInstance(), &Controller::boardChanged, net, &Net::onBoardChanged);
+
+    bot = new Bot(myColor);
+    connect(Controller::getInstance(), &Controller::boardChanged,
+            bot, &Bot::onBoardChanged);
+    connect(Controller::getInstance(), &Controller::statusChanged,
+            bot, &Bot::onStatusChanged);
 
     switch(myColor)
     {
     case BLACK:
         connect(bot, &Bot::setPieceBot,
                 Controller::getInstance(), &Controller::setPieceBlack);
-        connect(net, &Net::setPieceNet, Controller::getInstance(), &Controller::setPieceWhite);
+        connect(net, &Net::setPieceNet,
+                Controller::getInstance(), &Controller::setPieceWhite);
         break;
     case WHITE:
         connect(bot, &Bot::setPieceBot,
                 Controller::getInstance(), &Controller::setPieceWhite);
-        connect(net, &Net::setPieceNet, Controller::getInstance(), &Controller::setPieceBlack);
+        connect(net, &Net::setPieceNet,
+                Controller::getInstance(), &Controller::setPieceBlack);
         break;
     default:
         break;

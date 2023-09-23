@@ -20,21 +20,39 @@ Bot::~Bot()
     qDebug() << "~Bot()";
 }
 
-void Bot::doWork(const Piece color, const int y, const int x)
+void Bot::onBoardChanged(const Piece color, const int y, const int x)
+{
+    qDebug() << "Bot::onBoardChanged()";
+    board[y][x] = color;
+}
+
+void Bot::onStatusChanged(const Status status)
+{
+    qDebug() << "Bot::onStatusChanged()";
+    switch(status)
+    {
+    case START:
+        if(BLACK == botColor)
+            emit setPieceBot(9, 9);
+        break;
+    case BLACK1:
+        if(BLACK == botColor)
+            doWork();
+        break;
+    case WHITE1:
+        if(WHITE == botColor)
+            doWork();
+        break;
+    default:
+        break;
+    }
+}
+
+void Bot::doWork()
 {
     qDebug() << "doWork()";
 
-    board[y][x] = color;
-
-    if(Controller::getInstance()->whoseTurn() != botColor)
-        return;
-
-    // 첫 수는 항상 9, 9.
-    if(Controller::getInstance()->getStatus() == START)
-    {
-        emit setPieceBot(9, 9);
-        return;
-    }
+    int cnt = 0;
 
     // 임시로 빈칸 아무곳에나
     for(int y = 0; y < BOARDSIZE; y++)
@@ -44,7 +62,9 @@ void Bot::doWork(const Piece color, const int y, const int x)
             if(Controller::getInstance()->getBoard(y, x) == EMPTY)
             {
                 emit setPieceBot(y, x);
-                return;
+                cnt++;
+                if(cnt == 2)
+                    return;
             }
         }
     }
