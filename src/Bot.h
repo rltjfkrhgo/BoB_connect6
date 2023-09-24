@@ -19,9 +19,9 @@ public slots:
 
 signals:
     void setPieceBot(const int y, const int x);
-    void work();
 
 private:
+    void updateWeight(const Piece color, const int y, const int x);
     void doWork();
 
     Piece botColor;
