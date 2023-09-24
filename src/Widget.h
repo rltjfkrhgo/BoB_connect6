@@ -18,7 +18,8 @@ public:
     ~Widget();
 
 private slots:
-    void onBoardChanged(Status status);
+    void onBoardChanged(const Piece color, const int y, const int x);
+    void onStatusChanged(const Status status);
     void onResetButtonClicked();
     void onStartDuoButtonClicked();
     void onSoloBlackStartButtonClicked();
@@ -41,6 +42,8 @@ private:
     QLineEdit* ipEdit;
     QLineEdit* portEdit;
     QTextEdit* textEdit;
+    QString blackName;
+    QString whiteName;
 
     Bot* bot;
     Net* net;

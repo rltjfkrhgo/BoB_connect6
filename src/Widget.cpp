@@ -7,7 +7,7 @@ Widget::Widget(QWidget* parent)
 {
     renderArea = new RenderArea;
 
-    statusLabel = new QLabel(tr("Ready"));
+    statusLabel = new QLabel;
 
     startDuoButton = new QPushButton(tr("1 : 1"), this);
     soloBlackStartButton = new QPushButton(QIcon(":/resource/mushroom.png"),
@@ -35,8 +35,10 @@ Widget::Widget(QWidget* parent)
     textEdit = new QTextEdit(this);
     textEdit->setReadOnly(true);
 
-    connect(Controller::getInstance(), &Controller::statusChanged,
+    connect(Controller::getInstance(), &Controller::boardChanged,
             this, &Widget::onBoardChanged);
+    connect(Controller::getInstance(), &Controller::statusChanged,
+            this, &Widget::onStatusChanged);
 
     connect(startDuoButton, &QPushButton::clicked,
             this, &Widget::onStartDuoButtonClicked);
@@ -68,43 +70,35 @@ Widget::~Widget()
 {
 }
 
-void Widget::onBoardChanged(Status status)
+void Widget::onBoardChanged(const Piece color, const int y, const int x)
+{
+}
+
+void Widget::onStatusChanged(Status status)
 {
     renderArea->update();
 
-    QString str;
     switch(status)
     {
-    case READY:
-        str = "Ready";
-        break;
     case START:
-        str = "Start";
+        statusLabel->setText("[ "+blackName+" ] 님이 하실 차례입니다.");
         textEdit->append(tr("게임이 시작되었습니다."));
         break;
     case BLACK1:
-        str = "Black1";
-        break;
-    case BLACK2:
-        str = "Black2";
+        statusLabel->setText("[ "+blackName+" ] 님이 하실 차례입니다.");
         break;
     case WHITE1:
-        str = "White1";
-        break;
-    case WHITE2:
-        str = "White2";
+        statusLabel->setText("[ "+ whiteName+" ] 님이 하실 차례입니다.");
         break;
     case BLACKWIN:
-        str = "Black Win";
+        textEdit->append("["+blackName+"]님이 승리하였습니다.");
         break;
     case WHITEWIN:
-        str = "White Win";
+        textEdit->append("["+whiteName+"]님이 승리하였습니다.");
         break;
     default:
         break;
     }
-
-    statusLabel->setText(str);
 }
 
 void Widget::onResetButtonClicked()
@@ -125,6 +119,8 @@ void Widget::onResetButtonClicked()
     soloBlackStartButton->setEnabled(true);
     soloWhiteStartButton->setEnabled(true);
     networkStartButton->setEnabled(true);
+    statusLabel->clear();
+    textEdit->clear();
 
     connect(renderArea, &RenderArea::setPieceUser,
             Controller::getInstance(), &Controller::setPieceNull);
@@ -138,6 +134,8 @@ void Widget::onStartDuoButtonClicked()
     soloBlackStartButton->setEnabled(false);
     soloWhiteStartButton->setEnabled(false);
     networkStartButton->setEnabled(false);
+    blackName = "mushroom";
+    whiteName = "slime";
 
     connect(renderArea, &RenderArea::setPieceUser,
             Controller::getInstance(), &Controller::setPieceDuo);
@@ -161,6 +159,8 @@ void Widget::startBot(const Piece userColor)
     soloBlackStartButton->setEnabled(false);
     soloWhiteStartButton->setEnabled(false);
     networkStartButton->setEnabled(false);
+    blackName = "mushroom";
+    whiteName = "slime";
 
     bot = new Bot(!userColor);
     connect(Controller::getInstance(), &Controller::boardChanged,
@@ -217,12 +217,16 @@ void Widget::onPostStartNet(const Piece myColor, const QString& othername)
     switch(myColor)
     {
     case BLACK:
+        blackName = nameEdit->text();
+        whiteName = othername;
         connect(bot, &Bot::setPieceBot,
                 Controller::getInstance(), &Controller::setPieceBlack);
         connect(net, &Net::setPieceNet,
                 Controller::getInstance(), &Controller::setPieceWhite);
         break;
     case WHITE:
+        blackName = othername;
+        whiteName = nameEdit->text();
         connect(bot, &Bot::setPieceBot,
                 Controller::getInstance(), &Controller::setPieceWhite);
         connect(net, &Net::setPieceNet,
