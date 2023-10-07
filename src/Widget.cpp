@@ -70,14 +70,15 @@ Widget::~Widget()
 {
 }
 
-void Widget::onBoardChanged(const Piece color, const int y, const int x)
+void Widget::onBoardChanged([[maybe_unused]] const Piece color,
+                            [[maybe_unused]] const int y,
+                            [[maybe_unused]] const int x)
 {
+    renderArea->update();
 }
 
 void Widget::onStatusChanged(Status status)
 {
-    renderArea->update();
-
     switch(status)
     {
     case START:
