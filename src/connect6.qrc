@@ -1,0 +1,6 @@
+<!DOCTYPE RCC><RCC version="1.0">
+<qresource>
+    <file>resource/mushroom.png</file>
+    <file>resource/slime.png</file>
+</qresource>
+</RCC>
